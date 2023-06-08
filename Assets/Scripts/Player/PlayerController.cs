@@ -1,0 +1,394 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+
+using UnityEditor;
+public class PlayerController : Player
+{
+    [SerializeField] Volume volume;
+    Vignette vignette;
+    public static PlayerController Instance;
+    public Animator animator;
+    Coroutine damageCoroutine;
+
+    [Header("Movement")]
+
+    [SerializeField] float speed = 0;
+
+    Rigidbody rb;
+    Vector3 newPos;
+    [SerializeField] bool isRun, isRoll;
+    float horizontal, vertical, animSpeed, dashTime;
+
+
+    [Header("Combat")]
+    [SerializeField] List<AttackType> attackTypesPlayer;
+    // [SerializeField] AnimatorOverrideController rightClickAttakAnim;
+    [SerializeField] int attackTypeCount;
+    public Weapon equipmentWeapon;
+    Weapon.WeaponType playerEquiuppedWeaponType;
+    public bool isAttack,canAttack;
+    [SerializeField] float comboTimerForClickAttack;
+    Collider equimentWeaponCollider;
+
+    [Header("Skills")]
+    [SerializeField] List<SkillType> skillTypes;
+    [SerializeField] GameObject spear, sword;
+    [SerializeField] Transform spearSpawnPoint;
+    [SerializeField] bool skillActive;
+    [SerializeField] AnimatorOverrideController potionDrink;
+    float[] skillsCooldown = { 5, 10, 15 };
+    Rigidbody spearRb;
+
+
+
+    [Header("Interaction")]
+    [SerializeField] Interactable interactable;
+    bool inInteractableArea;
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        UIManager.Instance.GameStartUpdateUI(health);
+    }
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        spearRb = spear.GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        volume.profile.TryGet(out vignette);
+
+        foreach (var skill in skillTypes.Select((value, index) => (value, index)))
+        {
+            skill.value.useSkill = true;
+            skill.value.cooldown = skillsCooldown[skill.index];
+        }
+        ChangeWeapon();
+    }
+
+
+    void Update()
+    {
+        horizontal = Input.GetAxis("Horizontal") * Time.deltaTime ;
+        vertical = Input.GetAxis("Vertical")* Time.deltaTime ;
+        
+        
+        #region Move
+        if (health > 0)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                animator.StopPlayback();
+                Dash();
+            }
+            if ((horizontal != 0 || vertical != 0) && !isAttack)
+            {
+                Move();
+
+                if (speed <= 5 && animSpeed <= 5)
+                {
+                    animSpeed += Time.deltaTime * speed * 2;
+                }
+                if (isRun && animSpeed <= 7.5f)
+                {
+                    animSpeed += Time.deltaTime * speed * 2;
+                }
+                else if (!isRun && animSpeed >= 5)
+                {
+                    animSpeed -= Time.deltaTime * speed * 2;
+                }
+            }
+            else if (animSpeed >= 0)
+            {
+                animSpeed -= Time.deltaTime * speed * 8;
+            }
+
+            isRun = Input.GetKey(KeyCode.LeftShift) && !isAttack;
+            speed = isRun ? 7.5f : 5;
+            animator.SetFloat("speed", animSpeed);
+
+
+            #endregion
+            #region Combat
+            //Weapon ile combata bakılacak.
+            isAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")  ? true : false;
+            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll )
+            {
+                Attack(equipmentWeapon);
+            }
+            if (comboTimerForClickAttack < equipmentWeapon.comboResetTime)
+            {
+                comboTimerForClickAttack += Time.deltaTime;
+            }
+            else
+            {
+                ResetComboCount();
+            }
+           
+           
+            #endregion
+
+            #region Interaction
+
+            if (inInteractableArea && Input.GetKeyDown(KeyCode.E))
+            {
+                interactable.Interaction();
+            }
+
+            #endregion
+            #region SkillAndPotion
+            if ((Input.inputString.Equals("1") || Input.inputString.Equals("2") || Input.inputString.Equals("3")) && animator.GetCurrentAnimatorStateInfo(1).normalizedTime > 1)
+            {
+                UseSkill(int.Parse(Input.inputString));
+            }
+            if (Input.GetKeyDown(KeyCode.F) && !isRun && !isRoll)
+            {
+                PotionDrink(1);
+            }
+            #endregion
+        }
+    }
+
+    #region MoveMethod
+    void Move()
+    {
+        newPos = new Vector3(horizontal, 0, vertical);
+
+        Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
+        transform.rotation = Quaternion.LookRotation(direction);
+        //rb.velocity = new Vector3(horizontal*500,Physics.gravity.y,vertical*500);
+        transform.localPosition += newPos * speed;
+        
+    }
+    void Dash()
+    {
+        animator.SetTrigger("Roll");
+    }
+    void IsRollChange()
+    {
+        isRoll = !isRoll;
+    }
+    IEnumerator DashTimer()
+    {
+        while (dashTime < .25f)
+        {
+            dashTime += Time.deltaTime;
+            transform.Translate(new Vector3(0, 0, 0.25f), Space.Self);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        dashTime = 0;
+    }
+    #endregion
+
+
+    #region AttackMethod
+    void Attack(Weapon crWeapon)
+    {
+        if (attackTypeCount == attackTypesPlayer.Count)
+        {
+            attackTypeCount = 0;
+        }
+        comboTimerForClickAttack = 0;
+        animator.runtimeAnimatorController = crWeapon.attackTypes[attackTypeCount].animatorOV;
+        animator.SetTrigger("Attack");
+        //animator.Play("Attack", 1);
+        attackTypeCount++;
+    }
+    void ResetComboCount()
+    {
+        attackTypeCount = 0;
+        comboTimerForClickAttack = 0;
+    }
+    public void CheckAttack(string check)
+    {
+        canAttack = check.Equals("true") ? true : false;
+    }
+    // public void HitAnimationSpeedIncrease(float speed)
+    // {
+    //     animator.SetFloat("attackAnimationSpeed", speed);
+    // }
+    // public void HitAnimationSpeedDecrease()
+    // {
+    //     animator.SetFloat("attackAnimationSpeed", 1);
+    // }
+    public void OneShotPlaySound(string clipName)
+    {
+        string path = "Assets/Resources/Sounds/Player/" + clipName + ".wav";
+        AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+        GetComponent<AudioSource>().PlayOneShot(clip);
+    }
+
+    #endregion
+
+    #region InteractionMethods
+    void PlayerTakeDamage(Enemy enemy)
+    {
+        health -= enemy.damage;
+        CameraController.Instance.ScreenShake(0.1f);
+        StartCoroutine(UIManager.Instance.UpdateHpBar(enemy.damage, health, false));
+        if (health <= 0)
+        {
+            animator.SetBool("dead", true);
+        }
+        if (damageCoroutine != null)
+        {
+            StopCoroutine(damageCoroutine);
+        }
+        if (enemy.isAttack)
+            damageCoroutine = StartCoroutine(DamageEffectTime());
+
+    }
+    IEnumerator DamageEffectTime()
+    {
+        animator.SetTrigger("isDamaged");
+        vignette.smoothness.value = .4f;
+        while (vignette.smoothness.value > 0f)
+        {
+            vignette.smoothness.value -= Time.deltaTime;
+            yield return null;
+        }
+    }
+
+
+    #endregion
+
+    #region SkillMethods
+
+
+    void UseSkill(int skillType)
+    {
+        SkillType skill;
+        skill = skillTypes[skillType - 1];
+        animator.runtimeAnimatorController = skillTypes[(int)skill.skillEffect - 1].animatorOverrideController;
+        if (skill.useSkill)
+        {
+            switch (skill.skillEffect)
+            {
+                case SkillType.SkillEffect.Damage:
+                    Spear(skillTypes[skillType - 1].skillEffectScale);
+                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    break;
+                case SkillType.SkillEffect.Force:
+                    Force(skillTypes[skillType - 1].skillEffectScale);
+                    StartCoroutine(CameraController.Instance.skillAnimaton());
+                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    break;
+                case SkillType.SkillEffect.Shield:
+                    Shield(skillTypes[skillType - 1].skillEffectScale);
+                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    break;
+            }
+            animator.Play("Skill", 1);
+        }
+    }
+    delegate void ChangeCooldown(float time, bool isSkillUse);
+    IEnumerator SkillCooldownCalculate(ChangeCooldown act, SkillType skill)
+    {
+        float firstValue = skill.cooldown;
+        skill.useSkill = false;
+        while (skill.cooldown >= 0)
+        {
+            skill.cooldown -= Time.deltaTime;
+            yield return null;
+            act(skill.cooldown, skill.useSkill);
+        }
+        skill.useSkill = true;
+        act(firstValue, skill.useSkill);
+    }
+    void Spear(float damageScale)
+    {
+        spear.transform.position = spearSpawnPoint.position;
+        sword.SetActive(false);
+        spear.SetActive(true);
+        spearRb.AddForce(transform.forward * 20, ForceMode.Impulse);
+        StartCoroutine(nameof(SpearDisable));
+    }
+    IEnumerator SpearDisable()
+    {
+        yield return new WaitForSeconds(.5f);
+        sword.SetActive(true);
+        yield return new WaitForSeconds(3);
+        spear.SetActive(false);
+        spearRb.velocity = Vector3.zero;
+    }
+    void Shield(float shieldScale)
+    {
+    }
+    void Force(float forceScale)
+    {
+    }
+
+    void PotionDrink(int potionType)
+    {
+        animator.runtimeAnimatorController = potionDrink;
+        animator.Play("Interaction", 2);
+        float increasePercent = 0;
+        switch (potionType)
+        {
+            case 1:
+                increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
+                health += increasePercent;
+                StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true));
+                break;
+            case 2:
+                increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
+                stamina += 20;
+                break;
+        }
+    }
+
+    #endregion
+
+
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.tag.Equals("EnemyWeapon"))
+        {
+            Enemy attackEnemy = other.gameObject.GetComponentInParent<Enemy>();
+            if (attackEnemy.isAttack)
+                PlayerTakeDamage(attackEnemy);
+        }
+    }
+    void OnTriggerStay(Collider other)
+    {
+        inInteractableArea = true;
+        if (other.tag.Equals("Interactable"))
+        {
+            interactable = other.gameObject.GetComponent<Interactable>();
+        }
+    }
+    void OnTriggerExit(Collider other)
+    {
+        inInteractableArea = false;
+        interactable = null;
+    }
+
+    //-----------------------------------------
+    void ChangeWeapon()
+    {
+        //buraya değiştirilen silahın ve değiştirilmiş olan silahın bilgileri gerekli ki setactive ile kapatıp açmamız gerekli.
+        equipmentWeapon = GameObject.FindGameObjectWithTag("Weapon").GetComponent<Weapon>();
+        if (equipmentWeapon != null)
+        {
+            if (equipmentWeapon is Sword sword)
+            {
+                attackTypesPlayer = sword.attackTypes;
+                playerEquiuppedWeaponType = sword.weaponType;
+                equimentWeaponCollider = sword.weaponCollider;
+            }
+            else if (equipmentWeapon is Axe axe)
+            {
+                attackTypesPlayer = axe.attackTypes;
+                playerEquiuppedWeaponType = axe.weaponType;
+                equimentWeaponCollider = axe.weaponCollider;
+            }
+        }
+    }
+}
