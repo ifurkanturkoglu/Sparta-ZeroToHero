@@ -12,11 +12,20 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
-    public Slider hpBar;
+    public TextMeshProUGUI healthPotCountText,staminaPotCountText;
+    public Slider hpBar,staminaBar;
     void Awake()
     {
         if (Instance == null)
             Instance = this;
+        
+    }
+    void Start()
+    {
+        goldText.text = "Gold: "+GameManager.Instance.gold.ToString();   
+        healthPotCountText.text = Pots.Instance.healthPotionCount.ToString();
+        staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString(); 
+        scoreText.text = "Score: " + GameManager.Instance.score.ToString();
     }
 
     private void Update()
@@ -75,6 +84,19 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
     }
+    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase)
+    {
+        float time = 0;
+        float increaseType = increase == true ? 1 : -1;
+        while (time < potionStaminaPercent)
+        {
+
+            time += Time.deltaTime * 15;
+            stamina = stamina + (increaseType * Time.deltaTime);
+            staminaBar.value = staminaBar.value + (increaseType * Time.deltaTime * 15);
+            yield return null;
+        }
+    }
     public void MarketOpen(GameObject marketUI)
     {
         marketUI.SetActive(true);
@@ -83,8 +105,9 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    public void GameStartUpdateUI(float health)
+    public void GameStartUpdateUI(float health,float stamina)
     {
         hpBar.value = health;
+        staminaBar.value = stamina;
     }
 }

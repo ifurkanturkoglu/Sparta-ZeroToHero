@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     
 
     public int gold = 0;
-    [SerializeField] int score = 0;
+    public int score = 0;
     public int wave = 1;
 
     private void Awake()

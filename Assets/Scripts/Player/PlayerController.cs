@@ -6,6 +6,8 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 using UnityEditor;
+using System;
+
 public class PlayerController : Player
 {
     [SerializeField] Volume volume;
@@ -25,12 +27,14 @@ public class PlayerController : Player
 
 
     [Header("Combat")]
+    bool isChangingAttack;
+
     [SerializeField] List<AttackType> attackTypesPlayer;
     // [SerializeField] AnimatorOverrideController rightClickAttakAnim;
     [SerializeField] int attackTypeCount;
     public Weapon equipmentWeapon;
     Weapon.WeaponType playerEquiuppedWeaponType;
-    public bool isAttack,canAttack;
+    public bool isAttack, canAttack;
     [SerializeField] float comboTimerForClickAttack;
     Collider equimentWeaponCollider;
 
@@ -39,7 +43,7 @@ public class PlayerController : Player
     [SerializeField] GameObject spear, sword;
     [SerializeField] Transform spearSpawnPoint;
     [SerializeField] bool skillActive;
-    [SerializeField] AnimatorOverrideController potionDrink;
+
     float[] skillsCooldown = { 5, 10, 15 };
     Rigidbody spearRb;
 
@@ -53,7 +57,7 @@ public class PlayerController : Player
     {
         if (Instance == null)
             Instance = this;
-        UIManager.Instance.GameStartUpdateUI(health);
+        UIManager.Instance.GameStartUpdateUI(health, stamina);
     }
 
     void Start()
@@ -74,14 +78,14 @@ public class PlayerController : Player
 
     void Update()
     {
-        horizontal = Input.GetAxis("Horizontal") * Time.deltaTime ;
-        vertical = Input.GetAxis("Vertical")* Time.deltaTime ;
-        
-        
+        horizontal = Input.GetAxis("Horizontal") * Time.deltaTime;
+        vertical = Input.GetAxis("Vertical") * Time.deltaTime;
+
+
         #region Move
         if (health > 0)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !isRoll)
             {
                 animator.StopPlayback();
                 Dash();
@@ -116,8 +120,8 @@ public class PlayerController : Player
             #endregion
             #region Combat
             //Weapon ile combata bakılacak.
-            isAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack")  ? true : false;
-            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll )
+            isAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") ? true : false;
+            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll)
             {
                 Attack(equipmentWeapon);
             }
@@ -129,8 +133,8 @@ public class PlayerController : Player
             {
                 ResetComboCount();
             }
-           
-           
+
+
             #endregion
 
             #region Interaction
@@ -148,7 +152,11 @@ public class PlayerController : Player
             }
             if (Input.GetKeyDown(KeyCode.F) && !isRun && !isRoll)
             {
-                PotionDrink(1);
+                Pots.Instance.DrinkPot(Pots.Instance.equipmentPotType);
+            }
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                ChangeDrinkPotionType();
             }
             #endregion
         }
@@ -163,7 +171,7 @@ public class PlayerController : Player
         transform.rotation = Quaternion.LookRotation(direction);
         //rb.velocity = new Vector3(horizontal*500,Physics.gravity.y,vertical*500);
         transform.localPosition += newPos * speed;
-        
+
     }
     void Dash()
     {
@@ -187,8 +195,21 @@ public class PlayerController : Player
 
 
     #region AttackMethod
+
     void Attack(Weapon crWeapon)
     {
+        if (!isChangingAttack)
+        {
+            StartCoroutine(ChangeAttackType(crWeapon));
+        }
+    }
+
+    IEnumerator ChangeAttackType(Weapon crWeapon)
+    {
+        if (isChangingAttack) yield break;
+
+        isChangingAttack = true;
+        equipmentWeapon.GetComponent<Sword>().swordAttackEffect.enabled = true;
         if (attackTypeCount == attackTypesPlayer.Count)
         {
             attackTypeCount = 0;
@@ -196,9 +217,17 @@ public class PlayerController : Player
         comboTimerForClickAttack = 0;
         animator.runtimeAnimatorController = crWeapon.attackTypes[attackTypeCount].animatorOV;
         animator.SetTrigger("Attack");
-        //animator.Play("Attack", 1);
         attackTypeCount++;
+
+        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
+        {
+            print(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            yield return null;
+        }
+        equipmentWeapon.GetComponent<Sword>().swordAttackEffect.enabled = false;
+        isChangingAttack = false;
     }
+
     void ResetComboCount()
     {
         attackTypeCount = 0;
@@ -321,24 +350,21 @@ public class PlayerController : Player
     }
     void Force(float forceScale)
     {
+
     }
 
-    void PotionDrink(int potionType)
+
+    void ChangeDrinkPotionType()
     {
-        animator.runtimeAnimatorController = potionDrink;
-        animator.Play("Interaction", 2);
-        float increasePercent = 0;
-        switch (potionType)
+        print((int)Pots.Instance.equipmentPotType);
+        print(Enum.GetValues(typeof(Pots.PotsType)).Length);
+        if ((int)Pots.Instance.equipmentPotType >= Enum.GetValues(typeof(Pots.PotsType)).Length - 1)
         {
-            case 1:
-                increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
-                health += increasePercent;
-                StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true));
-                break;
-            case 2:
-                increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
-                stamina += 20;
-                break;
+            Pots.Instance.equipmentPotType = Pots.PotsType.Health;
+        }
+        else
+        {
+            Pots.Instance.equipmentPotType++;
         }
     }
 

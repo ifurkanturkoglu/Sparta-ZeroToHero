@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class NPCMarket : Interactable
 {
@@ -11,6 +12,7 @@ public class NPCMarket : Interactable
     public override AnimatorOverrideController animatorOverrideController { get { return playerNpcInteractionAnim; } set { value = playerNpcInteractionAnim; } }
     public override Transform targetPosition { get { return target; } set { value = target; } }
     bool canBuyWeaponEffect;
+    int objectGold;
     void Awake()
     {
         GameObject[] npcButtons = GameObject.FindGameObjectsWithTag("NPCMarketUI");
@@ -18,6 +20,7 @@ public class NPCMarket : Interactable
         {
             item.GetComponent<Button>().onClick.AddListener(Buy);
         }
+        MarketUI.SetActive(false);
     }
 
     public override void Interaction()
@@ -33,22 +36,66 @@ public class NPCMarket : Interactable
     public void Buy()
     {
         GameObject marketObject = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.gameObject;
-        print(marketObject.name);
-        int objectGold = int.Parse(marketObject.transform.GetChild(1).GetComponent<Text>().text);
+        string goldString = marketObject.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text;
+        int.TryParse(goldString, out objectGold);
         if (GameManager.Instance.gold >= objectGold)
         {
-            switch (marketObject.tag)
+            switch (marketObject.transform.parent.name)
             {
-                case "EffectUI":
-                    print("effect: "+marketObject.name);
+                case "Effects":
+                    switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Effect")))
+                    {
+                        case "Fire":
+                            print("fire");
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Fire,Color.blue);
+                            break;
+                        case "Poison":
+                            print("poison");
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Poison,Color.green);
+                            break;
+                        case "Blood":
+                            print("blood");
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Blood,Color.red);
+                            break;
+                    }
                     break;
-                case "PassiveUI":
-                    print("passive: "+marketObject.name);
+                case "Passive":
+                    switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Boost")))
+                    {
+                        case "Attack":
+                            Player.BuffPassives(Player.PassiveStatus.Damage);
+                            break;
+                        case "Health":
+                            RectTransform healthBarRect =  UIManager.Instance.hpBar.GetComponent<RectTransform>();
+                            healthBarRect.sizeDelta = new Vector2(healthBarRect.sizeDelta.x+10, healthBarRect.sizeDelta.y);
+                            healthBarRect.anchoredPosition = new Vector2(healthBarRect.anchoredPosition.x+5,healthBarRect.anchoredPosition.y);
+                            Player.BuffPassives(Player.PassiveStatus.Health);
+                            break;
+                        case "Stamina":
+                            RectTransform staminaBarRect =  UIManager.Instance.staminaBar.GetComponent<RectTransform>();
+                            staminaBarRect.sizeDelta = new Vector2(staminaBarRect.sizeDelta.x+10, staminaBarRect.sizeDelta.y);
+                            staminaBarRect.anchoredPosition = new Vector2(staminaBarRect.anchoredPosition.x+5,staminaBarRect.anchoredPosition.y);
+                            Player.BuffPassives(Player.PassiveStatus.Stamina);
+                            break;
+                    }
                     break;
-                case "PotUI":
-                    print("pot: "+marketObject.name);
+                case "Pots":
+                    switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Pot"))){
+                        case "Health":
+                            print("health pot arttı");
+                            Pots.Instance.healthPotionCount++;
+                            UIManager.Instance.healthPotCountText.text =Pots.Instance.healthPotionCount.ToString();
+                            break;
+                        case "Stamina":
+                            print("stamina pot arttı");
+                            Pots.Instance.staminaPotionCount++;
+                            UIManager.Instance.staminaPotCountText.text =Pots.Instance.staminaPotionCount.ToString();
+                            break;   
+                    }
                     break;
             }
+            GameManager.Instance.gold -= objectGold;
+            UIManager.Instance.goldText.text = "Gold: " + GameManager.Instance.gold.ToString();
         }
 
     }

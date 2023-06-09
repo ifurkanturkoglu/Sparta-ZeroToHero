@@ -12,13 +12,14 @@ public class Axe : Weapon
     public override Collider weaponCollider { get ; set ; }
 
     public WeaponType weaponType = WeaponType.Axe;
+    public override WeaponEffectType weaponEffectType { get ; set ; }
 
-    
     void Awake()
     {
         comboResetTime = 1.5f;
         damage = 10;
         weaponCollider = GetComponent<Collider>();
+        weaponEffectType = WeaponEffectType.Default;
     }
     void Start()
     {
@@ -29,5 +30,10 @@ public class Axe : Weapon
     void Update()
     {
         
+    }
+
+    public override void ChangeWeaponEffect(WeaponEffectType weaponEffect,Color color)
+    {
+        weaponEffectType = weaponEffect;
     }
 }

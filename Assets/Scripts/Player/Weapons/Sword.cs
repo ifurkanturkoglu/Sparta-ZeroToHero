@@ -10,9 +10,12 @@ public class Sword : Weapon
     public override float damage { get; set; }
     public override float comboResetTime { get; set ; }
     public override Collider weaponCollider { get ; set; }
+    public override WeaponEffectType weaponEffectType { get ; set ; }
 
     public WeaponType weaponType = WeaponType.Sword;
     [SerializeField] GameObject prevEnemy;
+    [SerializeField] Material swordEffectMaterial;
+    public TrailRenderer swordAttackEffect;
     bool isPlayingSound;
     
     void Awake()
@@ -20,6 +23,10 @@ public class Sword : Weapon
         damage = 25;
         comboResetTime = 2.25f;
         weaponCollider = GetComponent<Collider>();
+        weaponEffectType = WeaponEffectType.Default;
+        swordEffectMaterial.color = Color.white;
+        swordAttackEffect.material = swordEffectMaterial;
+        swordAttackEffect.enabled = false;
     }
     void Start()
     {
@@ -50,5 +57,11 @@ public class Sword : Weapon
             isPlayingSound = false;
         }
     }
-    
+
+    public override void ChangeWeaponEffect(WeaponEffectType weaponEffect,Color color)
+    {
+        weaponEffectType = weaponEffect;
+        swordEffectMaterial.color = color;
+        swordAttackEffect.material = swordEffectMaterial;
+    }
 }
