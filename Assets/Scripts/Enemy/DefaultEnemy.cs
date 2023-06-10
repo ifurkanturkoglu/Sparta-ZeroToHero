@@ -33,6 +33,9 @@ public class DefaultEnemy : Enemy
         attackRange = 1;
         health = 100;
         damage = 5;
+        gold = 10;
+        goldRate = 25;
+
     }
     private void Update()
     {
@@ -75,7 +78,7 @@ public class DefaultEnemy : Enemy
     public override IEnumerator InAreaAttack()
     {
         inSphereArea = true;
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         transform.LookAt(target.transform);
         inSphereArea = false;
     }
@@ -89,6 +92,7 @@ public class DefaultEnemy : Enemy
             isDead = true;
             animator.SetTrigger("isDead");
             animator.SetBool("isDeadBool", isDead);
+            CreateGold(transform, gold);
             Destroy(gameObject, 3);
         }
     }

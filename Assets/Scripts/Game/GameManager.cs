@@ -12,11 +12,13 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public int wave = 1;
 
+    public Transform goldsParent;
+    public GameObject goldPrefab;
+
     private void Awake()
     {
         Instance = this;
         gold = 1000;
-        print("Selam");
     }
     public void UpdateScore(int enemyScore)
     {

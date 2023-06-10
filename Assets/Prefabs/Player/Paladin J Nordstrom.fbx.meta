@@ -20,7 +20,7 @@ ModelImporter:
       name: Paladin_specular
     second: {fileID: 2800000, guid: faea61f7044b4d34cac6ed20dad8e329, type: 3}
   materials:
-    materialImportMode: 2
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1

@@ -22,6 +22,8 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
+        print(Pots.Instance.healthPotionCount.ToString());
+
         goldText.text = "Gold: "+GameManager.Instance.gold.ToString();   
         healthPotCountText.text = Pots.Instance.healthPotionCount.ToString();
         staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString(); 

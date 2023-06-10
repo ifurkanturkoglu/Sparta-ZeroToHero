@@ -11,6 +11,7 @@ TagManager:
   - EnemyWeapon
   - ClosableUI
   - NPCMarketUI
+  - Gold
   layers:
   - Default
   - TransparentFX

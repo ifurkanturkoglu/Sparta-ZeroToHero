@@ -27,4 +27,11 @@ public abstract class Enemy : MonoBehaviour
     public abstract void Attack();
     public abstract void TakeDamage();
     public abstract IEnumerator InAreaAttack();
+   
+    public void CreateGold(Transform createPos, int goldRate)
+    {
+        GameObject cloneGold = Instantiate(GameManager.Instance.goldPrefab,createPos.position + new Vector3(0,1,0), createPos.rotation);
+        cloneGold.GetComponent<Gold>().gold = goldRate;
+        cloneGold.transform.SetParent(GameManager.Instance.goldsParent);
+    }
 }
