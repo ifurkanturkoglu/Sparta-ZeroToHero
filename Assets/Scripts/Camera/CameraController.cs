@@ -39,7 +39,7 @@ public class CameraController : MonoBehaviour
         shakeTimer = shakeTime;
     }
 
-    public IEnumerator skillAnimaton(){
+    public IEnumerator skillAnimaton(int skillType){
         float time =0;
         while(Time.timeScale >= 0.5f){
             Time.timeScale -= Time.deltaTime;
@@ -57,5 +57,6 @@ public class CameraController : MonoBehaviour
             offset -= new Vector3(0,0,Time.deltaTime*20);
             yield return null;
         }
+        PlayerController.Instance.Force(PlayerController.Instance.skillTypes[skillType - 1].skillEffectScale);
     }
 }

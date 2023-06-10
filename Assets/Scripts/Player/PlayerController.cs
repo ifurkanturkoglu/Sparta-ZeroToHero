@@ -39,11 +39,12 @@ public class PlayerController : Player
     Collider equimentWeaponCollider;
 
     [Header("Skills")]
-    [SerializeField] List<SkillType> skillTypes;
+    public List<SkillType> skillTypes;
     [SerializeField] GameObject spear, sword;
     [SerializeField] Transform spearSpawnPoint;
-    [SerializeField] bool skillActive;
-
+    [SerializeField] bool skillActive,isShieldActive;
+    [SerializeField] Material shieldMaterial;
+    float forceRadius = 10f;
     float[] skillsCooldown = { 5, 10, 15 };
     Rigidbody spearRb;
 
@@ -66,6 +67,9 @@ public class PlayerController : Player
         spearRb = spear.GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         volume.profile.TryGet(out vignette);
+
+        Color color = new Color(0,0,0,1);
+        shieldMaterial.SetColor("_Color",color);
 
         foreach (var skill in skillTypes.Select((value, index) => (value, index)))
         {
@@ -257,7 +261,8 @@ public class PlayerController : Player
     #region InteractionMethods
     void PlayerTakeDamage(Enemy enemy)
     {
-        health -= enemy.damage;
+        float damage = isShieldActive ? enemy.damage - 2 : enemy.damage;
+        health -= damage;
         CameraController.Instance.ScreenShake(0.1f);
         StartCoroutine(UIManager.Instance.UpdateHpBar(enemy.damage, health, false));
         if (health <= 0)
@@ -303,8 +308,8 @@ public class PlayerController : Player
                     StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
                     break;
                 case SkillType.SkillEffect.Force:
-                    Force(skillTypes[skillType - 1].skillEffectScale);
-                    StartCoroutine(CameraController.Instance.skillAnimaton());
+                    StartCoroutine(CameraController.Instance.skillAnimaton(skillType));
+                    
                     StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
                     break;
                 case SkillType.SkillEffect.Shield:
@@ -334,7 +339,8 @@ public class PlayerController : Player
         spear.transform.position = spearSpawnPoint.position;
         sword.SetActive(false);
         spear.SetActive(true);
-        spearRb.AddForce(transform.forward * 20, ForceMode.Impulse);
+        spear.transform.rotation = Quaternion.LookRotation(transform.forward);
+        spearRb.velocity = transform.forward*50;
         StartCoroutine(nameof(SpearDisable));
     }
     IEnumerator SpearDisable()
@@ -347,10 +353,31 @@ public class PlayerController : Player
     }
     void Shield(float shieldScale)
     {
+        Color shieldColor = shieldMaterial.color;
+        shield +=50;
+        Color color = new Color(0,5,5,1);
+        shieldMaterial.SetColor("_Color",color);
+        StartCoroutine(ShieldTimer());
     }
-    void Force(float forceScale)
+    IEnumerator ShieldTimer(){
+        isShieldActive = true;
+        yield return new WaitForSeconds(15);
+        Color color = new Color(0,0,0,1);
+        shieldMaterial.SetColor("_Color",color);
+        isShieldActive = false;
+    }
+    public void Force(float forceScale)
     {
-
+        Collider[] enemiesInArea = Physics.OverlapSphere(transform.position, forceRadius);
+        foreach (Collider item in enemiesInArea)
+        {
+            Rigidbody rb = item.GetComponent<Rigidbody>();
+            print(item.name);
+            //burada bir layer sınırı koyulacak sadece düşmanları içermesi gerekli
+            if(rb != null)
+                rb.GetComponent<Rigidbody>().AddExplosionForce(100,transform.position,forceRadius,3f);
+        }
+        print("force");
     }
 
 
