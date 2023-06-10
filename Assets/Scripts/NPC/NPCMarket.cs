@@ -46,15 +46,12 @@ public class NPCMarket : Interactable
                     switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Effect")))
                     {
                         case "Fire":
-                            print("fire");
                             PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Fire,Color.blue);
                             break;
                         case "Poison":
-                            print("poison");
                             PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Poison,Color.green);
                             break;
                         case "Blood":
-                            print("blood");
                             PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Blood,Color.red);
                             break;
                     }
@@ -78,23 +75,22 @@ public class NPCMarket : Interactable
                             Player.BuffPassives(Player.PassiveStatus.Stamina);
                             break;
                     }
+                    GameManager.Instance.gold -= objectGold;
                     break;
                 case "Pots":
                     switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Pot"))){
                         case "Health":
-                            print("health pot arttı");
                             Pots.Instance.healthPotionCount++;
                             UIManager.Instance.healthPotCountText.text =Pots.Instance.healthPotionCount.ToString();
                             break;
                         case "Stamina":
-                            print("stamina pot arttı");
                             Pots.Instance.staminaPotionCount++;
                             UIManager.Instance.staminaPotCountText.text =Pots.Instance.staminaPotionCount.ToString();
                             break;   
                     }
+                    GameManager.Instance.gold -= objectGold;
                     break;
             }
-            GameManager.Instance.gold -= objectGold;
             UIManager.Instance.goldText.text = "Gold: " + GameManager.Instance.gold.ToString();
         }
 

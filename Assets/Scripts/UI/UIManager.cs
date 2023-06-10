@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI healthPotCountText,staminaPotCountText;
+    public TextMeshProUGUI informationText;
     public Slider hpBar,staminaBar;
     void Awake()
     {
@@ -44,6 +45,7 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+        staminaBar.value = Player.GetStamina();
     }
     #region Panels
     public void PausePanel()
@@ -111,5 +113,9 @@ public class UIManager : MonoBehaviour
     {
         hpBar.value = health;
         staminaBar.value = stamina;
+    }
+
+    public void InformationTextUpdate(string text,Color color){
+        
     }
 }

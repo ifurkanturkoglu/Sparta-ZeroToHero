@@ -51,12 +51,13 @@ public class CameraController : MonoBehaviour
         }
         
         yield return new WaitForSeconds(.2f);
+        PlayerController.Instance.Force(PlayerController.Instance.skillTypes[skillType - 1].skillEffectScale);
         Time.timeScale = 1;
         while(time >= 0){
             time -= Time.deltaTime;
             offset -= new Vector3(0,0,Time.deltaTime*20);
             yield return null;
         }
-        PlayerController.Instance.Force(PlayerController.Instance.skillTypes[skillType - 1].skillEffectScale);
+        
     }
 }

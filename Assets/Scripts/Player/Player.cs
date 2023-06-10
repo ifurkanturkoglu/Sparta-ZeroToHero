@@ -7,11 +7,17 @@ public class Player : MonoBehaviour
     protected  static float maxHealth = 100;
     protected float health = 100;
     protected static float maxStamina = 100;
-    protected float stamina = 100;
+    protected static float stamina = 100;
     protected float shield = 0;
 
     
     
+    void Update()
+    {
+        if(stamina <=100){
+            stamina += Time.deltaTime*0.2f;
+        }
+    }
 
     public static void BuffPassives(PassiveStatus status){
         switch(status){
@@ -27,8 +33,11 @@ public class Player : MonoBehaviour
                 UIManager.Instance.staminaBar.maxValue += 20;
                 break;
         }
-        print(maxHealth+"--"+maxStamina+"---"+PlayerController.Instance.equipmentWeapon.damage);
     }
+    public static float GetStamina(){
+        return stamina;
+    }
+
     public enum PassiveStatus{
         Health,Stamina,Damage
     }

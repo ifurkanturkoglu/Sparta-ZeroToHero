@@ -83,9 +83,9 @@ public class DefaultEnemy : Enemy
         inSphereArea = false;
     }
 
-    public override void TakeDamage()
+    public override void TakeDamage(float damage)
     {
-        health -= PlayerController.Instance.equipmentWeapon.damage;
+        health -= damage;
         animator.SetTrigger("damage");
         if (health <= 0)
         {
@@ -102,7 +102,7 @@ public class DefaultEnemy : Enemy
     {
         if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.isAttack && !isDead)
         {
-            TakeDamage();
+            TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
         }
     }
 }

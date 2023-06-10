@@ -22,7 +22,7 @@ public class TankEnemy : Enemy
     public override bool inSphereArea { get; set; }
     public override bool checkAttack { get; set; }
     public override bool isDead { get; set; }
-
+    
     [SerializeField] List<AttackTypeEnemy> attackTypesEnemy = new();
     AttackTypeEnemy attackType;
     private int currentAttackIndex = 0;
@@ -102,9 +102,9 @@ public class TankEnemy : Enemy
         inSphereArea = false;
     }
 
-    public override void TakeDamage()
+    public override void TakeDamage(float damage)
     {
-        health -= PlayerController.Instance.equipmentWeapon.damage;
+        health -= damage;
         isAttack = false;
         animator.SetTrigger("damage");
         if (health <= 0)
@@ -136,8 +136,7 @@ public class TankEnemy : Enemy
     {
         if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.canAttack && !isDead)
         {
-            TakeDamage();
-
+            TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
         }
     }
 }

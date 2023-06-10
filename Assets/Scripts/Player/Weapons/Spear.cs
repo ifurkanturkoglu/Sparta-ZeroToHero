@@ -7,10 +7,12 @@ public class Spear : MonoBehaviour
     int damage = 100;
 
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision other)
     {
-        if(other.GetComponent<Enemy>() != null){
-            other.GetComponent<Enemy>().health -=damage;
+        if(other.gameObject.tag.Equals("Enemy")){
+            print("spear");
+            EffectController.Instance.EnemyDamageEffect(other.gameObject.transform);
+            other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
         }
     }
 }

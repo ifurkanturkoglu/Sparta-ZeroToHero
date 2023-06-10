@@ -21,7 +21,8 @@ public class PlayerAnimationController : Player
     #region InteractionAnimation
     public IEnumerator InteractionWithMoveAndAnimation(Interactable interactable,Transform target){
         Vector3 moveDirection = (target.position - transform.position).normalized;
-        transform.Rotate(moveDirection);
+        transform.rotation = Quaternion.LookRotation(moveDirection);
+        PlayerController.Instance.isInteractionAnimation = true;
         //karakterin hareketi düzeltilecek. yönünü düzgün yapılması lazım.
         while(Vector3.Distance(transform.position,target.position) > 1f){
             PlayerController.Instance.animator.SetBool("isInteractionAnimation",true);
@@ -32,6 +33,7 @@ public class PlayerAnimationController : Player
         PlayerController.Instance.animator.runtimeAnimatorController = interactable.animatorOverrideController;
         PlayerController.Instance.animator.Play("Interaction",2);
         yield return new WaitForSeconds(1);
+        PlayerController.Instance.isInteractionAnimation = false;
     }
     #endregion
 }

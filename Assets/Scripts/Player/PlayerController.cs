@@ -17,8 +17,14 @@ public class PlayerController : Player
     Coroutine damageCoroutine;
 
     [Header("Movement")]
+    [SerializeField] Transform elevatorMidPosition;
 
+    bool deneme;
+    Vector3 minPosition, maxPosition;
     [SerializeField] float speed = 0;
+
+
+    [SerializeField] Collider elevatorCollider;
 
     Rigidbody rb;
     Vector3 newPos;
@@ -34,7 +40,7 @@ public class PlayerController : Player
     [SerializeField] int attackTypeCount;
     public Weapon equipmentWeapon;
     Weapon.WeaponType playerEquiuppedWeaponType;
-    public bool isAttack, canAttack;
+    public bool isAttack, canAttack, isInteractionAnimation;
     [SerializeField] float comboTimerForClickAttack;
     Collider equimentWeaponCollider;
 
@@ -42,8 +48,9 @@ public class PlayerController : Player
     public List<SkillType> skillTypes;
     [SerializeField] GameObject spear, sword;
     [SerializeField] Transform spearSpawnPoint;
-    [SerializeField] bool skillActive,isShieldActive;
+    [SerializeField] bool skillActive, isShieldActive;
     [SerializeField] Material shieldMaterial;
+    LayerMask enemyLayerMask;
     float forceRadius = 10f;
     float[] skillsCooldown = { 5, 10, 15 };
     Rigidbody spearRb;
@@ -58,18 +65,21 @@ public class PlayerController : Player
     {
         if (Instance == null)
             Instance = this;
-        UIManager.Instance.GameStartUpdateUI(health, stamina);
+
     }
 
     void Start()
     {
+        UIManager.Instance.GameStartUpdateUI(health, stamina);
         rb = GetComponent<Rigidbody>();
         spearRb = spear.GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         volume.profile.TryGet(out vignette);
 
-        Color color = new Color(0,0,0,1);
-        shieldMaterial.SetColor("_Color",color);
+        Color color = new Color(0, 0, 0, 1);
+        shieldMaterial.SetColor("_Color", color);
+
+        enemyLayerMask = LayerMask.GetMask("Enemy");
 
         foreach (var skill in skillTypes.Select((value, index) => (value, index)))
         {
@@ -86,6 +96,14 @@ public class PlayerController : Player
         vertical = Input.GetAxis("Vertical") * Time.deltaTime;
 
 
+        if (elevatorCollider.bounds.Contains(transform.position))
+        {
+            deneme = true;
+        }
+        else
+        {
+            deneme = false;
+        }
         #region Move
         if (health > 0)
         {
@@ -94,7 +112,7 @@ public class PlayerController : Player
                 animator.StopPlayback();
                 Dash();
             }
-            if ((horizontal != 0 || vertical != 0) && !isAttack)
+            if ((horizontal != 0 || vertical != 0) && !isAttack && !isInteractionAnimation)
             {
                 Move();
 
@@ -143,7 +161,7 @@ public class PlayerController : Player
 
             #region Interaction
 
-            if (inInteractableArea && Input.GetKeyDown(KeyCode.E))
+            if (inInteractableArea && Input.GetKeyDown(KeyCode.E) && !isInteractionAnimation)
             {
                 interactable.Interaction();
             }
@@ -173,8 +191,18 @@ public class PlayerController : Player
 
         Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
         transform.rotation = Quaternion.LookRotation(direction);
-        //rb.velocity = new Vector3(horizontal*500,Physics.gravity.y,vertical*500);
         transform.localPosition += newPos * speed;
+        if (deneme && Elevator.Instance.elevatorIsRun)
+        {
+            //alan sınırlaması yapılacak.
+            Vector3 minVec = new Vector3(260f,0,-5f);
+            Vector3 maxVec = new Vector3(265f,0,3f);
+
+            newPos = new Vector3(Mathf.Clamp(transform.position.x,minVec.x,maxVec.x),transform.position.y,Mathf.Clamp(transform.position.z,minVec.z,maxVec.z));
+            
+            transform.localPosition = newPos;
+        }
+
 
     }
     void Dash()
@@ -225,7 +253,6 @@ public class PlayerController : Player
 
         while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
         {
-            print(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
             yield return null;
         }
         equipmentWeapon.GetComponent<Sword>().swordAttackEffect.enabled = false;
@@ -241,14 +268,6 @@ public class PlayerController : Player
     {
         canAttack = check.Equals("true") ? true : false;
     }
-    // public void HitAnimationSpeedIncrease(float speed)
-    // {
-    //     animator.SetFloat("attackAnimationSpeed", speed);
-    // }
-    // public void HitAnimationSpeedDecrease()
-    // {
-    //     animator.SetFloat("attackAnimationSpeed", 1);
-    // }
     public void OneShotPlaySound(string clipName)
     {
         string path = "Assets/Resources/Sounds/Player/" + clipName + ".wav";
@@ -304,20 +323,34 @@ public class PlayerController : Player
             switch (skill.skillEffect)
             {
                 case SkillType.SkillEffect.Damage:
-                    Spear(skillTypes[skillType - 1].skillEffectScale);
-                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    if (stamina >= skill.mana)
+                    {
+                        stamina -= skill.mana;
+                        Spear(skillTypes[skillType - 1].skillEffectScale);
+                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        animator.Play("Skill", 1);
+                    }
                     break;
                 case SkillType.SkillEffect.Force:
-                    StartCoroutine(CameraController.Instance.skillAnimaton(skillType));
-                    
-                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    if (stamina >= skill.mana)
+                    {
+                        stamina -= skill.mana;
+                        StartCoroutine(CameraController.Instance.skillAnimaton(skillType));
+                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        animator.Play("Skill", 1);
+                    }
                     break;
                 case SkillType.SkillEffect.Shield:
-                    Shield(skillTypes[skillType - 1].skillEffectScale);
-                    StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                    if (stamina >= skill.mana)
+                    {
+                        stamina -= skill.mana;
+                        Shield(skillTypes[skillType - 1].skillEffectScale);
+                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        animator.Play("Skill", 1);
+                    }
                     break;
             }
-            animator.Play("Skill", 1);
+
         }
     }
     delegate void ChangeCooldown(float time, bool isSkillUse);
@@ -340,7 +373,7 @@ public class PlayerController : Player
         sword.SetActive(false);
         spear.SetActive(true);
         spear.transform.rotation = Quaternion.LookRotation(transform.forward);
-        spearRb.velocity = transform.forward*50;
+        spearRb.velocity = transform.forward * 50;
         StartCoroutine(nameof(SpearDisable));
     }
     IEnumerator SpearDisable()
@@ -354,37 +387,35 @@ public class PlayerController : Player
     void Shield(float shieldScale)
     {
         Color shieldColor = shieldMaterial.color;
-        shield +=50;
-        Color color = new Color(0,5,5,1);
-        shieldMaterial.SetColor("_Color",color);
+        shield += 50;
+        Color color = new Color(0, 8, 8, 1);
+        shieldMaterial.SetColor("_Color", color);
         StartCoroutine(ShieldTimer());
     }
-    IEnumerator ShieldTimer(){
+    IEnumerator ShieldTimer()
+    {
         isShieldActive = true;
         yield return new WaitForSeconds(15);
-        Color color = new Color(0,0,0,1);
-        shieldMaterial.SetColor("_Color",color);
+        Color color = new Color(0, 0, 0, 1);
+        shieldMaterial.SetColor("_Color", color);
         isShieldActive = false;
     }
     public void Force(float forceScale)
     {
-        Collider[] enemiesInArea = Physics.OverlapSphere(transform.position, forceRadius);
+        Collider[] enemiesInArea = Physics.OverlapSphere(transform.position, forceRadius, enemyLayerMask);
         foreach (Collider item in enemiesInArea)
         {
             Rigidbody rb = item.GetComponent<Rigidbody>();
-            print(item.name);
-            //burada bir layer sınırı koyulacak sadece düşmanları içermesi gerekli
-            if(rb != null)
-                rb.GetComponent<Rigidbody>().AddExplosionForce(100,transform.position,forceRadius,3f);
+            if (rb != null)
+            {
+                rb.GetComponent<Rigidbody>().AddExplosionForce(8000, transform.position, forceRadius, 3f, ForceMode.Force);
+            }
         }
-        print("force");
     }
 
 
     void ChangeDrinkPotionType()
     {
-        print((int)Pots.Instance.equipmentPotType);
-        print(Enum.GetValues(typeof(Pots.PotsType)).Length);
         if ((int)Pots.Instance.equipmentPotType >= Enum.GetValues(typeof(Pots.PotsType)).Length - 1)
         {
             Pots.Instance.equipmentPotType = Pots.PotsType.Health;

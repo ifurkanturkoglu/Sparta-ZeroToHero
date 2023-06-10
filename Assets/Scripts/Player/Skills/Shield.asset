@@ -18,3 +18,4 @@ MonoBehaviour:
   skillEffectScale: 50
   cooldown: 15
   useSkill: 1
+  mana: 30

@@ -9,6 +9,7 @@ public class SkillType : ScriptableObject
     public float skillEffectScale;
     public float cooldown;
     public bool useSkill;
+    public float mana;
     
     public enum SkillEffect{
         Damage=1,Force,Shield

@@ -6,7 +6,7 @@ public class Elevator : Interactable
 {
     public static Elevator Instance;
     [SerializeField] float elevatorMoveTime,elevatorSpeed;
-    [SerializeField] bool elevatorLocation,elevatorIsRun;
+    public bool elevatorLocation,elevatorIsRun;
 
     [SerializeField] AnimatorOverrideController pushButtonAnim;
     [SerializeField] Transform target;
@@ -19,14 +19,10 @@ public class Elevator : Interactable
         if(Instance == null)
             Instance = this;
     }
-
-    void Update()
-    {
-        
-    }
     public override void Interaction()
     {
-        StartCoroutine(nameof(ElevatorMove));
+        if(!elevatorIsRun)
+            StartCoroutine(nameof(ElevatorMove));
     }
     
     IEnumerator ElevatorMove(){

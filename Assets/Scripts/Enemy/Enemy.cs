@@ -25,7 +25,7 @@ public abstract class Enemy : MonoBehaviour
     public abstract bool isDead { get; set; }
     public abstract void Movement();
     public abstract void Attack();
-    public abstract void TakeDamage();
+    public abstract void TakeDamage(float damage);
     public abstract IEnumerator InAreaAttack();
    
     public void CreateGold(Transform createPos, int goldRate)
