@@ -8,25 +8,26 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
     [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject controlPanel;
     [SerializeField] GameObject settingsPanel;
-    public Image skill1,skill2,skill3;
+    public Image skill1, skill2, skill3;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
-    public TextMeshProUGUI healthPotCountText,staminaPotCountText;
+    public TextMeshProUGUI healthPotCountText, staminaPotCountText;
     public TextMeshProUGUI informationText;
-    public Slider hpBar,staminaBar;
+    public Slider hpBar, staminaBar;
     void Awake()
     {
         if (Instance == null)
             Instance = this;
-        
+
     }
     void Start()
     {
-        goldText.text = "Gold: "+GameManager.Instance.gold.ToString();   
+        goldText.text = "Gold: " + GameManager.Instance.gold.ToString();
         healthPotCountText.text = Pots.Instance.healthPotionCount.ToString();
-        staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString(); 
+        staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString();
         scoreText.text = "Score: " + GameManager.Instance.score.ToString();
     }
 
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && GameObject.FindGameObjectsWithTag("ClosableUI").Length <= 0)
         {
             pausePanel.SetActive(!pausePanel.activeSelf);
+            Time.timeScale = pausePanel.activeSelf ? 0 : 1;
         }
     }
     public void SettingsPanel()
@@ -67,6 +69,15 @@ public class UIManager : MonoBehaviour
     {
         pausePanel.SetActive(false);
     }
+    public void Controls()
+    {
+        controlPanel.SetActive(true);
+    }
+    public void CloseButton()
+    {
+        controlPanel.SetActive(false);
+
+    }
     public void ExitGame()
     {
         Application.Quit();
@@ -74,11 +85,11 @@ public class UIManager : MonoBehaviour
     #endregion
     #region InGameUI
 
-    public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase,GameObject? pot)
+    public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase, GameObject? pot)
     {
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
-        if(pot !=null)
+        if (pot != null)
             pot.SetActive(true);
         while (time < potionHealthPercent)
         {
@@ -88,14 +99,14 @@ public class UIManager : MonoBehaviour
             hpBar.value = hpBar.value + (increaseType * Time.deltaTime * 15);
             yield return null;
         }
-        if(pot !=null)
+        if (pot != null)
             pot.SetActive(false);
     }
-    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase,GameObject pot)
+    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase, GameObject pot)
     {
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
-        if(pot !=null)
+        if (pot != null)
             pot.SetActive(true);
         while (time < potionStaminaPercent)
         {
@@ -105,7 +116,7 @@ public class UIManager : MonoBehaviour
             staminaBar.value = staminaBar.value + (increaseType * Time.deltaTime * 15);
             yield return null;
         }
-        if(pot !=null)
+        if (pot != null)
             pot.SetActive(false);
     }
     public void MarketOpen(GameObject marketUI)
@@ -116,26 +127,29 @@ public class UIManager : MonoBehaviour
     #endregion
 
 
-    public void GameStartUpdateUI(float health,float stamina)
+    public void GameStartUpdateUI(float health, float stamina)
     {
         hpBar.value = health;
         staminaBar.value = stamina;
     }
 
-    public void InformationTextUpdate(string text,Color color){
-        
+    public void InformationTextUpdate(string text, Color color)
+    {
+
     }
 
-    public IEnumerator SkillIconUpdate(Image skillImage,float cooldown){
+    public IEnumerator SkillIconUpdate(Image skillImage, float cooldown)
+    {
         float timer = 0;
         skillImage.fillAmount = 0;
-        
-        while(timer <= cooldown){
+
+        while (timer <= cooldown)
+        {
             print(timer);
-            timer +=Time.deltaTime;
-            skillImage.fillAmount += Time.deltaTime*1/cooldown;
+            timer += Time.deltaTime;
+            skillImage.fillAmount += Time.deltaTime * 1 / cooldown;
             yield return null;
         }
     }
-    
+
 }
