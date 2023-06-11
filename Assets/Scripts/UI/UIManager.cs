@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
     [SerializeField] GameObject pausePanel;
+    [SerializeField] GameObject controlPanel;
     [SerializeField] GameObject settingsPanel;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI scoreText;
@@ -53,6 +54,7 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && GameObject.FindGameObjectsWithTag("ClosableUI").Length <= 0)
         {
             pausePanel.SetActive(!pausePanel.activeSelf);
+            Time.timeScale = pausePanel.activeSelf ? 0 : 1;
         }
     }
     public void SettingsPanel()
@@ -67,6 +69,16 @@ public class UIManager : MonoBehaviour
     public void Resume()
     {
         pausePanel.SetActive(false);
+        Time.timeScale = pausePanel.activeSelf ? 0 : 1;
+    }
+    public void ControlButton()
+    {
+        controlPanel.SetActive(true);
+    }
+    public void CloseButton()
+    {
+        controlPanel.SetActive(false);
+
     }
     public void ExitGame()
     {
