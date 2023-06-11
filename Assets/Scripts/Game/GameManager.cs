@@ -8,17 +8,27 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     
 
-    public int gold = 0;
-    public int score = 0;
+    public int gold;
+    public int score;
     public int wave = 1;
 
     public Transform goldsParent;
     public GameObject goldPrefab;
 
+    public int dieEnemyCount=-1;
+    public bool waveComplete;
+
     private void Awake()
     {
         Instance = this;
-        gold = 1000;
+        gold = 100000;
+        score = 0;
+    }
+    void Update()
+    {
+        if(dieEnemyCount == GenerateEnemy.Instance.enemyCount){
+            waveComplete = true;
+        }
     }
     public void UpdateScore(int enemyScore)
     {

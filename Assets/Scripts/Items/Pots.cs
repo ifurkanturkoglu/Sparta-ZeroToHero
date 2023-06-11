@@ -9,6 +9,7 @@ public class Pots : Player
     public int staminaPotionCount;
     public PotsType equipmentPotType = PotsType.Health;
     [SerializeField] AnimatorOverrideController potionDrink;
+    [SerializeField] GameObject healthPotion,staminaPotion;
     bool canPotDrink;
 
 
@@ -35,7 +36,7 @@ public class Pots : Player
                         healthPotionCount--;
                         increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
                         health += increasePercent;
-                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true));
+                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true,healthPotion));
                         UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
@@ -48,7 +49,7 @@ public class Pots : Player
                         increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
                         stamina += increasePercent;
                         UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
-                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true));
+                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
                     }

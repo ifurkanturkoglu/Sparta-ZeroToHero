@@ -21,7 +21,7 @@ public class Elevator : Interactable
     }
     public override void Interaction()
     {
-        if(!elevatorIsRun)
+        if(!elevatorIsRun && GameManager.Instance.waveComplete)
             StartCoroutine(nameof(ElevatorMove));
     }
     

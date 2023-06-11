@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 public class GenerateEnemy : MonoBehaviour
 {
+    public static GenerateEnemy Instance;
     int totalEnemyCount;
     public int normal, faster, ranger, tank = 0;
     public int enemyCount;
@@ -12,14 +13,21 @@ public class GenerateEnemy : MonoBehaviour
     [SerializeField] Transform enemies, player;
     GameObject cloneEnemy;
     int lowerBound = 3, upperBound = 3;
+
+    void Awake()
+    {
+        if(Instance == null)
+            Instance = this;
+    }
     private void Start()
     {
         //Invoke(nameof(NewEnemy), 2);
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V) && GameManager.Instance.waveComplete)
         {
+            GameManager.Instance.waveComplete = false;
             GameManager.Instance.IncreaseWave();
             NewEnemy();
         }

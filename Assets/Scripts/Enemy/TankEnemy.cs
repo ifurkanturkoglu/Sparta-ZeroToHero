@@ -112,8 +112,9 @@ public class TankEnemy : Enemy
             isDead = true;
             animator.SetTrigger("isDead");
             animator.SetBool("isDeadBool", isDead);
+            GameManager.Instance.UpdateScore(score);
             CreateGold(transform,gold);
-            
+            GameManager.Instance.dieEnemyCount++;
             Destroy(gameObject, 3);
         }
 

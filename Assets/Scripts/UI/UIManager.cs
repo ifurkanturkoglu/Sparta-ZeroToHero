@@ -74,10 +74,12 @@ public class UIManager : MonoBehaviour
     #endregion
     #region InGameUI
 
-    public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase)
+    public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase,GameObject? pot)
     {
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
+        if(pot !=null)
+            pot.SetActive(true);
         while (time < potionHealthPercent)
         {
 
@@ -86,11 +88,15 @@ public class UIManager : MonoBehaviour
             hpBar.value = hpBar.value + (increaseType * Time.deltaTime * 15);
             yield return null;
         }
+        if(pot !=null)
+            pot.SetActive(false);
     }
-    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase)
+    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase,GameObject pot)
     {
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
+        if(pot !=null)
+            pot.SetActive(true);
         while (time < potionStaminaPercent)
         {
 
@@ -99,6 +105,8 @@ public class UIManager : MonoBehaviour
             staminaBar.value = staminaBar.value + (increaseType * Time.deltaTime * 15);
             yield return null;
         }
+        if(pot !=null)
+            pot.SetActive(false);
     }
     public void MarketOpen(GameObject marketUI)
     {
@@ -123,6 +131,7 @@ public class UIManager : MonoBehaviour
         skillImage.fillAmount = 0;
         
         while(timer <= cooldown){
+            print(timer);
             timer +=Time.deltaTime;
             skillImage.fillAmount += Time.deltaTime*1/cooldown;
             yield return null;

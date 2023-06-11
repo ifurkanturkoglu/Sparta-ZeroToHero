@@ -10,6 +10,7 @@ using System;
 
 public class PlayerController : Player
 {
+    [SerializeField] GameObject FinishUI;
     [SerializeField] Volume volume;
     Vignette vignette;
     public static PlayerController Instance;
@@ -297,10 +298,11 @@ public class PlayerController : Player
         }
         health -= damage;
         CameraController.Instance.ScreenShake(0.1f);
-        StartCoroutine(UIManager.Instance.UpdateHpBar(damage, health, false));
+        StartCoroutine(UIManager.Instance.UpdateHpBar(damage, health, false,null));
         if (health <= 0)
         {
             animator.SetBool("dead", true);
+            FinishUI.SetActive(true);
         }
 
     }
@@ -465,7 +467,7 @@ public class PlayerController : Player
         if (other.transform.tag.Equals("EnemyWeapon"))
         {
             Enemy attackEnemy = other.gameObject.GetComponentInParent<Enemy>();
-            if (attackEnemy.isAttack)
+            if (attackEnemy.isAttack && health > 0)
                 PlayerTakeDamage(attackEnemy, null);
         }
     }
