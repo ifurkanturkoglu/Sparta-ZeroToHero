@@ -10,7 +10,6 @@ public class CameraController : MonoBehaviour
     [SerializeField]public  Vector3 offset = new Vector3(0,8,-10);
     Vector3 a = Vector3.zero;
 
-    float shakeDuration = 0.1f;
     float shakeIntensity = 0.4f;
     float shakeTimer;
     Vector3 orginalPosition;

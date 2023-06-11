@@ -9,6 +9,7 @@ public class Pots : Player
     public int staminaPotionCount;
     public PotsType equipmentPotType = PotsType.Health;
     [SerializeField] AnimatorOverrideController potionDrink;
+    bool canPotDrink;
 
 
     void Awake()
@@ -22,33 +23,46 @@ public class Pots : Player
     public void DrinkPot(PotsType potType)
     {
         float increasePercent = 0;
-        switch (potType)
+        
+        if (!canPotDrink)
         {
-            case PotsType.Health:
-                if (healthPotionCount > 0)
-                {
-                    healthPotionCount--;
-                    increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
-                    health += increasePercent;
-                    StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true));
-                    UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
-                    PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
-                    PlayerController.Instance.animator.Play("Interaction", 2);
-                }
-                break;
-            case PotsType.Stamina:
-                if (staminaPotionCount > 0)
-                {
-                    staminaPotionCount--;
-                    increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
-                    stamina += increasePercent;
-                     UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
-                    StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true));
-                    PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
-                    PlayerController.Instance.animator.Play("Interaction", 2);
-                }
-                break;
+            StartCoroutine(PotsDrinkCheck());
+            switch (potType)
+            {
+                case PotsType.Health:
+                    if (healthPotionCount > 0)
+                    {
+                        healthPotionCount--;
+                        increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
+                        health += increasePercent;
+                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true));
+                        UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
+                        PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
+                        PlayerController.Instance.animator.Play("Interaction", 2);
+                    }
+                    break;
+                case PotsType.Stamina:
+                    if (staminaPotionCount > 0)
+                    {
+                        staminaPotionCount--;
+                        increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
+                        stamina += increasePercent;
+                        UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
+                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true));
+                        PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
+                        PlayerController.Instance.animator.Play("Interaction", 2);
+                    }
+                    break;
+            }
         }
+
+    }
+    IEnumerator PotsDrinkCheck()
+    {
+        if(canPotDrink) yield break;
+        canPotDrink = true;
+        yield return new WaitForSeconds(2);
+        canPotDrink = false;
     }
     public enum PotsType
     {

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
     [SerializeField] GameObject pausePanel;
     [SerializeField] GameObject settingsPanel;
+    public Image skill1,skill2,skill3;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
@@ -23,8 +24,6 @@ public class UIManager : MonoBehaviour
     }
     void Start()
     {
-        print(Pots.Instance.healthPotionCount.ToString());
-
         goldText.text = "Gold: "+GameManager.Instance.gold.ToString();   
         healthPotCountText.text = Pots.Instance.healthPotionCount.ToString();
         staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString(); 
@@ -118,4 +117,16 @@ public class UIManager : MonoBehaviour
     public void InformationTextUpdate(string text,Color color){
         
     }
+
+    public IEnumerator SkillIconUpdate(Image skillImage,float cooldown){
+        float timer = 0;
+        skillImage.fillAmount = 0;
+        
+        while(timer <= cooldown){
+            timer +=Time.deltaTime;
+            skillImage.fillAmount += Time.deltaTime*1/cooldown;
+            yield return null;
+        }
+    }
+    
 }

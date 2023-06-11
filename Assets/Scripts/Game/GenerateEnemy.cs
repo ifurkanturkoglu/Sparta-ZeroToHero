@@ -26,7 +26,7 @@ public class GenerateEnemy : MonoBehaviour
     }
     private void NewEnemy()
     {
-        lowerBound = (lowerBound * 3) / 2;
+        lowerBound = lowerBound +3;
         upperBound = lowerBound + 5;
 
         totalEnemyCount = Random.Range(lowerBound, upperBound);

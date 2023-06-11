@@ -143,7 +143,7 @@ public class PlayerController : Player
             #region Combat
             //Weapon ile combata bakılacak.
             isAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") ? true : false;
-            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll)
+            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll&& !isInteractionAnimation)
             {
                 Attack(equipmentWeapon);
             }
@@ -195,11 +195,11 @@ public class PlayerController : Player
         if (deneme && Elevator.Instance.elevatorIsRun)
         {
             //alan sınırlaması yapılacak.
-            Vector3 minVec = new Vector3(260f,0,-5f);
-            Vector3 maxVec = new Vector3(265f,0,3f);
+            Vector3 minVec = new Vector3(255f, 0, -9f);
+            Vector3 maxVec = new Vector3(270f, 0, 6f);
 
-            newPos = new Vector3(Mathf.Clamp(transform.position.x,minVec.x,maxVec.x),transform.position.y,Mathf.Clamp(transform.position.z,minVec.z,maxVec.z));
-            
+            newPos = new Vector3(Mathf.Clamp(transform.position.x, minVec.x, maxVec.x), transform.position.y, Mathf.Clamp(transform.position.z, minVec.z, maxVec.z));
+
             transform.localPosition = newPos;
         }
 
@@ -268,36 +268,46 @@ public class PlayerController : Player
     {
         canAttack = check.Equals("true") ? true : false;
     }
-    public void OneShotPlaySound(string clipName)
-    {
-        string path = "Assets/Resources/Sounds/Player/" + clipName + ".wav";
-        AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
-        GetComponent<AudioSource>().PlayOneShot(clip);
-    }
+    // public void OneShotPlaySound(string clipName)
+    // {
+    //     string path = "Assets/Resources/Sounds/Player/" + clipName + ".wav";
+    //     AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+    //     GetComponent<AudioSource>().PlayOneShot(clip);
+    // }
 
     #endregion
 
     #region InteractionMethods
-    void PlayerTakeDamage(Enemy enemy)
+    public void PlayerTakeDamage(Enemy? enemy, float? damagePercent)
     {
-        float damage = isShieldActive ? enemy.damage - 2 : enemy.damage;
-        health -= damage;
-        CameraController.Instance.ScreenShake(0.1f);
-        StartCoroutine(UIManager.Instance.UpdateHpBar(enemy.damage, health, false));
-        if (health <= 0)
-        {
-            animator.SetBool("dead", true);
-        }
+        float damage = 0;
         if (damageCoroutine != null)
         {
             StopCoroutine(damageCoroutine);
         }
-        if (enemy.isAttack)
+        if (enemy != null)
+        {
+            damage = isShieldActive ? enemy.damage - 2 : enemy.damage;
             damageCoroutine = StartCoroutine(DamageEffectTime());
+        }
+        else if (damagePercent != null)
+        {
+            damage = (float)(isShieldActive ? damagePercent - 15 : damagePercent);
+            damageCoroutine = StartCoroutine(DamageEffectTime());
+        }
+        health -= damage;
+        CameraController.Instance.ScreenShake(0.1f);
+        StartCoroutine(UIManager.Instance.UpdateHpBar(damage, health, false));
+        if (health <= 0)
+        {
+            animator.SetBool("dead", true);
+        }
 
     }
+
     IEnumerator DamageEffectTime()
     {
+        
         animator.SetTrigger("isDamaged");
         vignette.smoothness.value = .4f;
         while (vignette.smoothness.value > 0f)
@@ -328,6 +338,7 @@ public class PlayerController : Player
                         stamina -= skill.mana;
                         Spear(skillTypes[skillType - 1].skillEffectScale);
                         StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill1,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
                     break;
@@ -337,6 +348,7 @@ public class PlayerController : Player
                         stamina -= skill.mana;
                         StartCoroutine(CameraController.Instance.skillAnimaton(skillType));
                         StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill2,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
                     break;
@@ -346,6 +358,7 @@ public class PlayerController : Player
                         stamina -= skill.mana;
                         Shield(skillTypes[skillType - 1].skillEffectScale);
                         StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
+                        StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill3,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
                     break;
@@ -408,9 +421,25 @@ public class PlayerController : Player
             Rigidbody rb = item.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.GetComponent<Rigidbody>().AddExplosionForce(8000, transform.position, forceRadius, 3f, ForceMode.Force);
+                rb.isKinematic = false;
+                rb.AddExplosionForce(8000, transform.position, forceRadius, 3f, ForceMode.Force);
             }
         }
+        StartCoroutine(ThenForce(enemiesInArea));
+    }
+    IEnumerator ThenForce(Collider[] enemyRb)
+    {
+        yield return new WaitForSeconds(2);
+
+        foreach (var item in enemyRb)
+        {
+            Rigidbody rb = item.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true;
+            }
+        }
+
     }
 
 
@@ -437,7 +466,7 @@ public class PlayerController : Player
         {
             Enemy attackEnemy = other.gameObject.GetComponentInParent<Enemy>();
             if (attackEnemy.isAttack)
-                PlayerTakeDamage(attackEnemy);
+                PlayerTakeDamage(attackEnemy, null);
         }
     }
     void OnTriggerStay(Collider other)

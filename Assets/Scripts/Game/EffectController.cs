@@ -6,6 +6,7 @@ public class EffectController : MonoBehaviour
 {
     public static EffectController Instance;
     [SerializeField] ParticleSystem enemyDamageEffect;
+    [SerializeField] GameObject bloodEffect;
     void Start()
     {
         if(Instance == null)
@@ -21,5 +22,11 @@ public class EffectController : MonoBehaviour
     public void EnemyDamageEffect(Transform enemyPosition){
         enemyDamageEffect.transform.position = enemyPosition.position;
         enemyDamageEffect.Play();
+    }
+    public IEnumerator EnemyDamageBlood(Transform enemyPosition){
+        bloodEffect.transform.position = new Vector3(enemyPosition.position.x,1, enemyPosition.position.z);
+        bloodEffect.SetActive(true);
+        yield return new WaitForSeconds(.5f);
+        bloodEffect.SetActive(false);
     }
 }

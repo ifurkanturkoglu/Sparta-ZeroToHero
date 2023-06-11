@@ -45,7 +45,8 @@ public class Sword : Weapon
             prevEnemy = other.gameObject;
             isPlayingSound = true;
             //AudioController.Instance.attackAudioClips();
-            EffectController.Instance.EnemyDamageEffect(other.gameObject.transform);
+            //EffectController.Instance.EnemyDamageEffect(other.gameObject.transform);
+            StartCoroutine(EffectController.Instance.EnemyDamageBlood(other.gameObject.transform));
             CameraController.Instance.ScreenShake(0.07f);
         }
     }

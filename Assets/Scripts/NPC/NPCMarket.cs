@@ -46,13 +46,13 @@ public class NPCMarket : Interactable
                     switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Effect")))
                     {
                         case "Fire":
-                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Fire,Color.blue);
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Fire,new Color(191,34,0,255));
                             break;
                         case "Poison":
-                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Poison,Color.green);
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Poison,new Color(16,191,0,255));
                             break;
                         case "Blood":
-                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Blood,Color.red);
+                            PlayerController.Instance.equipmentWeapon.ChangeWeaponEffect(Weapon.WeaponEffectType.Blood,new Color(191,16,16,255));
                             break;
                     }
                     break;

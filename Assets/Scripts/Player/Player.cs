@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance;
     protected  static float maxHealth = 100;
-    protected float health = 100;
+    protected  float  health = 100;
     protected static float maxStamina = 100;
     protected static float stamina = 100;
     protected float shield = 0;
@@ -14,6 +15,9 @@ public class Player : MonoBehaviour
     
     void Update()
     {
+        if(Instance == null){
+            Instance=this;
+        }
         if(stamina <=100){
             stamina += Time.deltaTime*0.2f;
         }
