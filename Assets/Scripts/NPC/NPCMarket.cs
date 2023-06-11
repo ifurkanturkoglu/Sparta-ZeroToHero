@@ -15,7 +15,6 @@ public class NPCMarket : Interactable
     int objectGold;
     void Awake()
     {
-        print("npc");
         GameObject[] npcButtons = GameObject.FindGameObjectsWithTag("NPCMarketUI");
         foreach (var item in npcButtons)
         {
@@ -42,7 +41,6 @@ public class NPCMarket : Interactable
         int.TryParse(goldString, out objectGold);
         if (GameManager.Instance.gold >= objectGold)
         {
-            print("market");
             switch (marketObject.transform.parent.name)
             {
                 case "Effects":

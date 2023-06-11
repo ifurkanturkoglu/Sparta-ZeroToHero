@@ -16,7 +16,12 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI healthPotCountText, staminaPotCountText;
     public TextMeshProUGUI informationText;
-    public Slider hpBar, staminaBar;
+    public Slider hpBar,staminaBar;
+
+    public string interactionInfoText ="Press the 'E' key to interact.";
+    public string waveInfoText = "Press 'V' to start the wave";
+    public bool textOrder ;
+
     void Awake()
     {
         if (Instance == null)
@@ -67,6 +72,7 @@ public class UIManager : MonoBehaviour
     }
     public void Resume()
     {
+        Time.timeScale = 1;
         pausePanel.SetActive(false);
     }
     public void Controls()
@@ -133,21 +139,19 @@ public class UIManager : MonoBehaviour
         staminaBar.value = stamina;
     }
 
-    public void InformationTextUpdate(string text, Color color)
-    {
-
+    public void InformationTextUpdate(string text,Color color){
+        informationText.text = text;
+        informationText.color = color;
     }
 
     public IEnumerator SkillIconUpdate(Image skillImage, float cooldown)
     {
         float timer = 0;
         skillImage.fillAmount = 0;
-
-        while (timer <= cooldown)
-        {
-            print(timer);
-            timer += Time.deltaTime;
-            skillImage.fillAmount += Time.deltaTime * 1 / cooldown;
+        
+        while(timer <= cooldown){
+            timer +=Time.deltaTime;
+            skillImage.fillAmount += Time.deltaTime*1/cooldown;
             yield return null;
         }
     }

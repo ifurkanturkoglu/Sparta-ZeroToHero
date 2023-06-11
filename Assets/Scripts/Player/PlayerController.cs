@@ -25,7 +25,7 @@ public class PlayerController : Player
     [SerializeField] float speed = 0;
 
 
-    [SerializeField] Collider elevatorCollider;
+    public Collider elevatorCollider;
 
     Rigidbody rb;
     Vector3 newPos;
@@ -41,7 +41,7 @@ public class PlayerController : Player
     [SerializeField] int attackTypeCount;
     public Weapon equipmentWeapon;
     Weapon.WeaponType playerEquiuppedWeaponType;
-    public bool isAttack, canAttack, isInteractionAnimation;
+    public bool isAttack, canAttack, isInteractionAnimation,isDamaged;
     [SerializeField] float comboTimerForClickAttack;
     Collider equimentWeaponCollider;
 
@@ -60,7 +60,7 @@ public class PlayerController : Player
 
     [Header("Interaction")]
     [SerializeField] Interactable interactable;
-    bool inInteractableArea;
+    [SerializeField] bool inInteractableArea;
 
     void Awake()
     {
@@ -79,6 +79,7 @@ public class PlayerController : Player
 
         Color color = new Color(0, 0, 0, 1);
         shieldMaterial.SetColor("_Color", color);
+        
 
         enemyLayerMask = LayerMask.GetMask("Enemy");
 
@@ -144,7 +145,7 @@ public class PlayerController : Player
             #region Combat
             //Weapon ile combata bakılacak.
             isAttack = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") ? true : false;
-            if ((Input.GetMouseButtonDown(0)) && !isAttack && !isRun && !isRoll&& !isInteractionAnimation)
+            if ((Input.GetMouseButtonDown(0))&& !isDamaged && !isAttack && !isRun && !isRoll&& !isInteractionAnimation)
             {
                 Attack(equipmentWeapon);
             }
@@ -306,7 +307,9 @@ public class PlayerController : Player
         }
 
     }
-
+    public void CheckIsDamaged(string text){
+        isDamaged = text.Equals("true")? true: false;
+    }
     IEnumerator DamageEffectTime()
     {
         
@@ -317,6 +320,7 @@ public class PlayerController : Player
             vignette.smoothness.value -= Time.deltaTime;
             yield return null;
         }
+        
     }
 
 
@@ -424,7 +428,7 @@ public class PlayerController : Player
             if (rb != null)
             {
                 rb.isKinematic = false;
-                rb.AddExplosionForce(8000, transform.position, forceRadius, 3f, ForceMode.Force);
+                rb.AddExplosionForce(2000, transform.position, forceRadius, 3f, ForceMode.Force);
             }
         }
         StartCoroutine(ThenForce(enemiesInArea));
@@ -476,11 +480,25 @@ public class PlayerController : Player
         inInteractableArea = true;
         if (other.tag.Equals("Interactable"))
         {
+            
             interactable = other.gameObject.GetComponent<Interactable>();
+            if(GameManager.Instance.waveComplete && !Elevator.Instance.elevatorIsRun){
+                UIManager.Instance.InformationTextUpdate(UIManager.Instance.interactionInfoText,Color.white);
+            }
+            else{
+                UIManager.Instance.InformationTextUpdate("",Color.white);
+            }
         }
     }
     void OnTriggerExit(Collider other)
     {
+        if(GameManager.Instance.waveComplete && !Elevator.Instance.elevatorLocation && !Elevator.Instance.elevatorIsRun){
+            UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
+        }
+        else if(GameManager.Instance.waveComplete && !Elevator.Instance.elevatorIsRun){
+            UIManager.Instance.InformationTextUpdate("",Color.white);
+        }
+       
         inInteractableArea = false;
         interactable = null;
     }

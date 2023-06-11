@@ -25,8 +25,9 @@ public class GenerateEnemy : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V) && GameManager.Instance.waveComplete)
+        if (Input.GetKeyDown(KeyCode.V) && GameManager.Instance.waveComplete && !Elevator.Instance.elevatorIsRun && !Elevator.Instance.elevatorLocation)
         {
+            UIManager.Instance.InformationTextUpdate("",Color.green);
             GameManager.Instance.waveComplete = false;
             GameManager.Instance.IncreaseWave();
             NewEnemy();
@@ -34,8 +35,9 @@ public class GenerateEnemy : MonoBehaviour
     }
     private void NewEnemy()
     {
-        lowerBound = lowerBound +3;
-        upperBound = lowerBound + 5;
+        
+        lowerBound = lowerBound +1;
+        upperBound = lowerBound + 2;
 
         totalEnemyCount = Random.Range(lowerBound, upperBound);
         int normalMin = totalEnemyCount / 2;

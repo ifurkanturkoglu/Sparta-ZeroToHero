@@ -10,7 +10,6 @@ public class Spear : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.tag.Equals("Enemy")){
-            print("spear");
             EffectController.Instance.EnemyDamageEffect(other.gameObject.transform);
             other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
         }

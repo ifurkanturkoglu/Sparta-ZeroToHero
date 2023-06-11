@@ -40,6 +40,7 @@ public class TankEnemy : Enemy
         health = 225;
         gold = 40;
         goldRate = 20;
+        score = 200;
     }
     private void Update()
     {
@@ -115,6 +116,9 @@ public class TankEnemy : Enemy
             GameManager.Instance.UpdateScore(score);
             CreateGold(transform,gold);
             GameManager.Instance.dieEnemyCount++;
+            if(GameManager.Instance.waveComplete){
+                UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
+            }
             Destroy(gameObject, 3);
         }
 

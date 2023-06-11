@@ -35,6 +35,7 @@ public class DefaultEnemy : Enemy
         damage = 5;
         gold = 10;
         goldRate = 25;
+        score = 50;
 
     }
     private void Update()
@@ -95,6 +96,9 @@ public class DefaultEnemy : Enemy
             GameManager.Instance.UpdateScore(score);
             CreateGold(transform, gold);
             GameManager.Instance.dieEnemyCount++;
+            if(GameManager.Instance.waveComplete){
+                UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
+            }
             Destroy(gameObject, 3);
         }
     }
@@ -102,7 +106,7 @@ public class DefaultEnemy : Enemy
     public void CheckDamagedStatus(string boolType) { isDamaged = boolType == "true" ? true : false; }
     void OnCollisionEnter(Collision other)
     {
-        if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.isAttack && !isDead)
+        if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.canAttack&& !isDead)
         {
             TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
         }

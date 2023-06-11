@@ -21,13 +21,19 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gold = 100000;
+        gold = 0;
         score = 0;
+        
+    }
+    void Start()
+    {
+        UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
     }
     void Update()
     {
         if(dieEnemyCount == GenerateEnemy.Instance.enemyCount){
             waveComplete = true;
+            dieEnemyCount =0;
         }
     }
     public void UpdateScore(int enemyScore)

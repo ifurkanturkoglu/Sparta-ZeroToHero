@@ -11,7 +11,11 @@ public class Player : MonoBehaviour
     protected static float stamina = 100;
     protected float shield = 0;
 
-    
+    void  Start()
+    {
+        health = 100;
+        stamina = 100;
+    }
     
     void Update()
     {

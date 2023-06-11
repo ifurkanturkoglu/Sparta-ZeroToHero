@@ -21,12 +21,16 @@ public class Elevator : Interactable
     }
     public override void Interaction()
     {
-        if(!elevatorIsRun && GameManager.Instance.waveComplete)
+        if(!elevatorIsRun && GameManager.Instance.waveComplete){
             StartCoroutine(nameof(ElevatorMove));
+        }
+
+            
     }
     
     IEnumerator ElevatorMove(){
         yield return StartCoroutine(PlayerAnimationController.Instance.InteractionWithMoveAndAnimation(this,targetPosition));
+        UIManager.Instance.InformationTextUpdate("",Color.white);
         elevatorLocation = !elevatorLocation;
         elevatorIsRun = true;
         int upOrDown = elevatorLocation ? -1 : 1;
