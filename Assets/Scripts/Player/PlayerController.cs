@@ -71,7 +71,7 @@ public class PlayerController : Player
 
     void Start()
     {
-        UIManager.Instance.GameStartUpdateUI(health, stamina);
+        
         rb = GetComponent<Rigidbody>();
         spearRb = spear.GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();

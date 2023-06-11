@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gold = 0;
+        gold = 1000;
         score = 0;
         
     }
@@ -34,6 +34,9 @@ public class GameManager : MonoBehaviour
         if(dieEnemyCount == GenerateEnemy.Instance.enemyCount){
             waveComplete = true;
             dieEnemyCount =0;
+        }
+        if(Input.GetKeyDown(KeyCode.F7)){
+            SceneManager.LoadScene(1);
         }
     }
     public void UpdateScore(int enemyScore)

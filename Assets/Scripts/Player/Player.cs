@@ -13,8 +13,9 @@ public class Player : MonoBehaviour
 
     void  Start()
     {
-        health = 100;
-        stamina = 100;
+        health = 20;
+        stamina = 20;
+        UIManager.Instance.GameStartUpdateUI(health, stamina);
     }
     
     void Update()

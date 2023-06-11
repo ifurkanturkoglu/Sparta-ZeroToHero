@@ -99,7 +99,6 @@ public class UIManager : MonoBehaviour
             pot.SetActive(true);
         while (time < potionHealthPercent)
         {
-
             time += Time.deltaTime * 15;
             health = health + (increaseType * Time.deltaTime);
             hpBar.value = hpBar.value + (increaseType * Time.deltaTime * 15);
@@ -108,7 +107,7 @@ public class UIManager : MonoBehaviour
         if (pot != null)
             pot.SetActive(false);
     }
-    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase, GameObject pot)
+    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase, GameObject? pot)
     {
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
@@ -116,7 +115,6 @@ public class UIManager : MonoBehaviour
             pot.SetActive(true);
         while (time < potionStaminaPercent)
         {
-
             time += Time.deltaTime * 15;
             stamina = stamina + (increaseType * Time.deltaTime);
             staminaBar.value = staminaBar.value + (increaseType * Time.deltaTime * 15);
@@ -135,6 +133,7 @@ public class UIManager : MonoBehaviour
 
     public void GameStartUpdateUI(float health, float stamina)
     {
+        print(health);
         hpBar.value = health;
         staminaBar.value = stamina;
     }

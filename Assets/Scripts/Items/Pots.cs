@@ -48,8 +48,8 @@ public class Pots : Player
                         staminaPotionCount--;
                         increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
                         stamina += increasePercent;
-                        UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
                         StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
+                        UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
                     }
