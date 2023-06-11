@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
@@ -93,6 +93,7 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase, GameObject? pot)
     {
+        
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
         if (pot != null)
@@ -123,6 +124,9 @@ public class UIManager : MonoBehaviour
         if (pot != null)
             pot.SetActive(false);
     }
+
+
+    
     public void MarketOpen(GameObject marketUI)
     {
         marketUI.SetActive(true);
@@ -133,7 +137,6 @@ public class UIManager : MonoBehaviour
 
     public void GameStartUpdateUI(float health, float stamina)
     {
-        print(health);
         hpBar.value = health;
         staminaBar.value = stamina;
     }
@@ -153,6 +156,11 @@ public class UIManager : MonoBehaviour
             skillImage.fillAmount += Time.deltaTime*1/cooldown;
             yield return null;
         }
+    }
+
+
+    public void menüyegit(){
+        SceneManager.LoadScene(0);
     }
 
 }

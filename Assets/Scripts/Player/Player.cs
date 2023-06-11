@@ -6,15 +6,20 @@ public class Player : MonoBehaviour
 {
     public static Player Instance;
     protected  static float maxHealth = 100;
-    protected  float  health = 100;
+    public  float  health = 100;
     protected static float maxStamina = 100;
     protected static float stamina = 100;
     protected float shield = 0;
 
+    void Awake()
+    {
+        if(Instance == null)
+            Instance = this;
+    }
     void  Start()
     {
-        health = 20;
-        stamina = 20;
+        health = 100;
+        stamina = 100;
         UIManager.Instance.GameStartUpdateUI(health, stamina);
     }
     
@@ -43,7 +48,7 @@ public class Player : MonoBehaviour
                 break;
         }
     }
-    public static float GetStamina(){
+    public static float  GetStamina(){
         return stamina;
     }
 

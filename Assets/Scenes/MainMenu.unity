@@ -584,6 +584,28 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3858329818514014044, guid: cb80988373f16e04dbd6a22e7a607eb8,
+        type: 3}
+      propertyPath: m_text
+      value: "<b><size=70>character</size></b>\n\nMOVE  >  WASD\n\nRun > SH\u0130FT\n\nATTACK 
+        > MOUSE \n\nROLL > SPACE\n\nWAVE START > V\n\nINTERACTION > E\n\nPOT DRINK
+        > F\n\nPOT CHANGE > Q\n\nRESTART GAME SHORTCUT > F7\n"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858329818514014044, guid: cb80988373f16e04dbd6a22e7a607eb8,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858329818514014044, guid: cb80988373f16e04dbd6a22e7a607eb8,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858329818698106962, guid: cb80988373f16e04dbd6a22e7a607eb8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3858329818798542601, guid: cb80988373f16e04dbd6a22e7a607eb8,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target

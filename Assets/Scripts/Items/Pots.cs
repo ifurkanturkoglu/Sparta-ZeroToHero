@@ -34,9 +34,9 @@ public class Pots : Player
                     if (healthPotionCount > 0)
                     {
                         healthPotionCount--;
-                        increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
-                        health += increasePercent;
-                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, health, true,healthPotion));
+                        increasePercent = PlayerController.Instance.health + 20 >= maxHealth ? maxHealth - PlayerController.Instance.health : 20;
+                        PlayerController.Instance.health += increasePercent;
+                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, PlayerController.Instance.health, true,healthPotion));
                         UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
@@ -48,8 +48,8 @@ public class Pots : Player
                         staminaPotionCount--;
                         increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
                         stamina += increasePercent;
-                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
                         UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
+                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
                     }
@@ -58,6 +58,7 @@ public class Pots : Player
         }
 
     }
+
     IEnumerator PotsDrinkCheck()
     {
         if(canPotDrink) yield break;

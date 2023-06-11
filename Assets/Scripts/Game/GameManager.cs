@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gold = 1000;
+        gold = 0;
         score = 0;
         
     }
