@@ -28726,7 +28726,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b><size=70>character</size></b>\n\nMOVE  >  WASD\n\nRun > SH\u0130FT\n\nATTACK 
+  m_text: "<b><size=70>character</size></b>\n\nMOVE  >  WASD\n\nRun > SHIFT\n\nATTACK 
     > MOUSE \n\nROLL > SPACE\n\nWAVE START > V\n\nINTERACTION > E\n\nPOT DRINK >
     F\n\nPOT CHANGE > Q\n\nRESTART GAME SHORTCUT > F7\n"
   m_isRightToLeft: 0
@@ -33012,7 +33012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6318892706026414659
 RectTransform:
   m_ObjectHideFlags: 0

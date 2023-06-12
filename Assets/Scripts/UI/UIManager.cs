@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
         healthPotCountText.text = Pots.Instance.healthPotionCount.ToString();
         staminaPotCountText.text = Pots.Instance.staminaPotionCount.ToString();
         scoreText.text = "Score: " + GameManager.Instance.score.ToString();
+        healthPotCountText.color = Color.green;
     }
 
     private void Update()
@@ -161,6 +162,7 @@ public class UIManager : MonoBehaviour
 
     public void menüyegit(){
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 
 }

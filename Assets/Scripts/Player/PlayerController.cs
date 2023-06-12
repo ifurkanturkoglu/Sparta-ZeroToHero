@@ -459,6 +459,17 @@ public class PlayerController : Player
         {
             Pots.Instance.equipmentPotType++;
         }
+        switch (Pots.Instance.equipmentPotType)
+        {
+            case Pots.PotsType.Health:
+                UIManager.Instance.healthPotCountText.color = Color.green;
+                UIManager.Instance.staminaPotCountText.color = Color.white;
+                break;
+            case Pots.PotsType.Stamina:
+                UIManager.Instance.healthPotCountText.color = Color.white;
+                UIManager.Instance.staminaPotCountText.color = Color.green;
+                break;
+        }
     }
 
     #endregion

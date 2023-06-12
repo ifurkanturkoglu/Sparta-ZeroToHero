@@ -108,7 +108,7 @@ public class TankEnemy : Enemy
         health -= damage;
         isAttack = false;
         animator.SetTrigger("damage");
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
             isDead = true;
             animator.SetTrigger("isDead");
