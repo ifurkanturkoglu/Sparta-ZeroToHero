@@ -21,14 +21,14 @@ public class AudioManager : MonoBehaviour
     }
     public void MasterValue()
     {
-        audioMixer.SetFloat("master", master.value);
+        audioMixer.SetFloat("master", Mathf.Log10(master.value)*20);
     }
     public void MusicValue()
     {
-        audioMixer.SetFloat("music", music.value);
+        audioMixer.SetFloat("music",  Mathf.Log10(music.value)*20);
     }
     public void SoundEffectValue()
     {
-        audioMixer.SetFloat("sfx", sfx.value);
+        audioMixer.SetFloat("sfx",  Mathf.Log10(sfx.value)*20);
     }
 }
