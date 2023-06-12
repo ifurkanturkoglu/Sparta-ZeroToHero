@@ -35,6 +35,7 @@ public class PlayerController : Player
 
     [Header("Combat")]
     bool isChangingAttack;
+    [SerializeField] AudioClip damageSound,deathSound;
 
     [SerializeField] List<AttackType> attackTypesPlayer;
     // [SerializeField] AnimatorOverrideController rightClickAttakAnim;
@@ -197,8 +198,8 @@ public class PlayerController : Player
         if (deneme && Elevator.Instance.elevatorIsRun)
         {
             //alan sınırlaması yapılacak.
-            Vector3 minVec = new Vector3(255f, 0, -9f);
-            Vector3 maxVec = new Vector3(270f, 0, 6f);
+            Vector3 minVec = new Vector3(258f, 0, -7.9f);
+            Vector3 maxVec = new Vector3(269f, 0, 6f);
 
             newPos = new Vector3(Mathf.Clamp(transform.position.x, minVec.x, maxVec.x), transform.position.y, Mathf.Clamp(transform.position.z, minVec.z, maxVec.z));
 
@@ -300,8 +301,10 @@ public class PlayerController : Player
         health -= damage;
         CameraController.Instance.ScreenShake(0.1f);
         StartCoroutine(UIManager.Instance.UpdateHpBar(damage, health, false,null));
+        AudioController.Instance.audioSource.PlayOneShot(damageSound);
         if (health <= 0)
         {
+            AudioController.Instance.audioSource.PlayOneShot(deathSound);
             animator.SetBool("dead", true);
             FinishUI.SetActive(true);
         }
@@ -312,7 +315,7 @@ public class PlayerController : Player
     }
     IEnumerator DamageEffectTime()
     {
-        
+       
         animator.SetTrigger("isDamaged");
         vignette.smoothness.value = .4f;
         while (vignette.smoothness.value > 0f)
@@ -428,7 +431,7 @@ public class PlayerController : Player
             if (rb != null)
             {
                 rb.isKinematic = false;
-                rb.AddExplosionForce(2000, transform.position, forceRadius, 3f, ForceMode.Force);
+                rb.AddExplosionForce(4000, transform.position, forceRadius, 3f, ForceMode.Force);
             }
         }
         StartCoroutine(ThenForce(enemiesInArea));

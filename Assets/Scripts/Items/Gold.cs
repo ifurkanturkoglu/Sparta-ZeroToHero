@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Gold : MonoBehaviour
 {
+    [SerializeField] AudioClip soundEffect;
     public static Gold instance;
     public int gold;
     private void Awake()
@@ -18,6 +19,7 @@ public class Gold : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             GameManager.Instance.UpdateGold(gold);
+            AudioController.Instance.audioSource.PlayOneShot(soundEffect);
             Destroy(gameObject);
             
         }

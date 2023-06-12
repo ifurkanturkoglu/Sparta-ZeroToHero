@@ -5,7 +5,7 @@ using UnityEngine;
 public class AudioController : MonoBehaviour
 {
     public static AudioController Instance;
-    [SerializeField] AudioSource audioSource; 
+    public AudioSource audioSource; 
     [SerializeField] List<AudioClip> attacksAudioClips;
     // Start is called before the first frame update
     void Start()

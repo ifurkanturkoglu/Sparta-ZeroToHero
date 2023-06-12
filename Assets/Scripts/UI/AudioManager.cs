@@ -12,7 +12,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        master.value = (music.maxValue + music.minValue) / 4;
+        master.value = master.maxValue;
         music.value = music.maxValue;
         sfx.value = sfx.maxValue;
 

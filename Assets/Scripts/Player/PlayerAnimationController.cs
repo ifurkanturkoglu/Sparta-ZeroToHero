@@ -24,9 +24,10 @@ public class PlayerAnimationController : Player
         transform.rotation = Quaternion.LookRotation(moveDirection);
         PlayerController.Instance.isInteractionAnimation = true;
         //karakterin hareketi düzeltilecek. yönünü düzgün yapılması lazım.
+        PlayerController.Instance.animator.SetBool("isInteractionAnimation",true);
         while(Vector3.Distance(transform.position,target.position) > 1f){
-            PlayerController.Instance.animator.SetBool("isInteractionAnimation",true);
-            transform.position += moveDirection *Time.deltaTime;
+           
+            transform.position += moveDirection *Time.deltaTime*3f;
             yield return null;
         }
         PlayerController.Instance.animator.SetBool("isInteractionAnimation",false);

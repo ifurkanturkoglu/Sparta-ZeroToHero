@@ -10,6 +10,7 @@ public class Pots : Player
     public PotsType equipmentPotType = PotsType.Health;
     [SerializeField] AnimatorOverrideController potionDrink;
     [SerializeField] GameObject healthPotion,staminaPotion;
+    [SerializeField] AudioClip potSound;
     bool canPotDrink;
 
 
@@ -40,6 +41,7 @@ public class Pots : Player
                         UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
+                        AudioController.Instance.audioSource.PlayOneShot(potSound);
                     }
                     break;
                 case PotsType.Stamina:
@@ -52,6 +54,7 @@ public class Pots : Player
                         StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
+                        AudioController.Instance.audioSource.PlayOneShot(potSound);
                     }
                     break;
             }

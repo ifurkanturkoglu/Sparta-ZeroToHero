@@ -934,11 +934,26 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6135518012946814510, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6135518012946814511, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
         type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6135518012946814511, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
+        type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d91788299e2763544ad8372a2142a6bc, type: 3}
+    - target: {fileID: 6135518012946814511, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
+        type: 3}
+      propertyPath: damageSound
+      value: 
+      objectReference: {fileID: 8300000, guid: ad042c865582d4d459e1e5b3dc373e35, type: 3}
     - target: {fileID: 6135518012946814545, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
         type: 3}
       propertyPath: m_Enabled
