@@ -12,6 +12,7 @@ TagManager:
   - ClosableUI
   - NPCMarketUI
   - Gold
+  - MainMusic
   layers:
   - Default
   - TransparentFX

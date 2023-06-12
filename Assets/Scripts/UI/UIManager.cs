@@ -163,6 +163,7 @@ public class UIManager : MonoBehaviour
     public void menüyegit(){
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
+        Destroy(GameObject.FindGameObjectWithTag("MainMusic"));
     }
 
 }

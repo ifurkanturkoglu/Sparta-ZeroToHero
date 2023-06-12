@@ -338,7 +338,7 @@ GameObject:
   - component: {fileID: 596387188}
   m_Layer: 0
   m_Name: Music
-  m_TagString: Untagged
+  m_TagString: MainMusic
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -963,6 +963,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7440853522504090339, guid: 707599254d3b6ef449b33f9ad1a4f8e7,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 707599254d3b6ef449b33f9ad1a4f8e7, type: 3}
