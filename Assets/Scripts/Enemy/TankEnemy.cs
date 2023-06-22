@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,13 +22,12 @@ public class TankEnemy : Enemy
     public override bool inSphereArea { get; set; }
     public override bool checkAttack { get; set; }
     public override bool isDead { get; set; }
-    
+
     [SerializeField] List<AttackTypeEnemy> attackTypesEnemy = new();
     AttackTypeEnemy attackType;
-    private int currentAttackIndex = 0;
-    [SerializeField] bool isAttacking = false;
+    [SerializeField] bool isAttacking;
     [SerializeField] int damageCount = 0;
-
+    int currentAttackIndex = 1;
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -47,7 +46,6 @@ public class TankEnemy : Enemy
         if (!isDamaged && !isDead)
         {
             checkAttack = Physics.CheckSphere(transform.position, attackRange, playerLayer);
-
             Movement();
             if (checkAttack && !isAttacking)
             {
@@ -56,6 +54,7 @@ public class TankEnemy : Enemy
         }
         attackType = attackTypesEnemy[currentAttackIndex];
         damage = attackType.damage;
+        Death();
     }
     public override void Movement()
     {
@@ -73,11 +72,7 @@ public class TankEnemy : Enemy
 
     public override void Attack()
     {
-        if (!isAttacking)
-        {
-            StartCoroutine(AttackChange());
-        }
-
+        StartCoroutine(AttackChange());
     }
 
     public IEnumerator AttackChange()
@@ -94,35 +89,40 @@ public class TankEnemy : Enemy
             StartCoroutine(InAreaAttack());
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         isAttacking = false;
+        animator.ResetTrigger("Attack");
     }
     public override IEnumerator InAreaAttack()
     {
         inSphereArea = true;
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
         transform.LookAt(target.transform);
         inSphereArea = false;
     }
-
     public override void TakeDamage(float damage)
     {
         health -= damage;
         isAttack = false;
         animator.SetTrigger("damage");
+    }
+
+    private void Death()
+    {
         if (health <= 0 && !isDead)
         {
             isDead = true;
             animator.SetTrigger("isDead");
             animator.SetBool("isDeadBool", isDead);
             GameManager.Instance.UpdateScore(score);
-            CreateGold(transform,gold);
+            CreateGold(transform, gold);
             GameManager.Instance.dieEnemyCount++;
-            if(GameManager.Instance.waveComplete){
-                UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
+            if (GameManager.Instance.waveComplete)
+            {
+                UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText, Color.green);
             }
             Destroy(gameObject, 3);
         }
-
     }
+
     public void CheckAttackStatus() { isAttack = !isAttack; }
     public void CheckDamagedStatus(string boolType)
     {
@@ -144,4 +144,13 @@ public class TankEnemy : Enemy
             TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
         }
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
 }
+
+// movementstate
+// attackstate
+// deathstate

@@ -822,8 +822,8 @@ GameObject:
   - component: {fileID: 8609389516195274178}
   - component: {fileID: 8934092664592138113}
   - component: {fileID: 2349996408686261213}
-  - component: {fileID: 8248941431710374590}
   - component: {fileID: -3010029154873708327}
+  - component: {fileID: 8248941431710374590}
   m_Layer: 7
   m_Name: Tank
   m_TagString: Enemy
@@ -906,6 +906,22 @@ CapsuleCollider:
   m_Height: 2.2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &-3010029154873708327
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3085333387943550210}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!114 &8248941431710374590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -923,22 +939,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eea5f7732c0536243b2813617d301a8e, type: 2}
   isAttacking: 0
   damageCount: 0
---- !u!54 &-3010029154873708327
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3085333387943550210}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!1 &3722586151066455272
 GameObject:
   m_ObjectHideFlags: 0
