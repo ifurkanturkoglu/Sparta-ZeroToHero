@@ -12,7 +12,7 @@ public class Spear : MonoBehaviour
     {
         if(other.gameObject.tag.Equals("Enemy")){
             AudioController.Instance.audioSource.PlayOneShot(_audioClip);
-            EffectController.Instance.EnemyDamageBlood(other.gameObject.transform);
+            StartCoroutine(EffectController.Instance.EnemyDamageBlood(other.gameObject.transform));
             other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
         }
     }
