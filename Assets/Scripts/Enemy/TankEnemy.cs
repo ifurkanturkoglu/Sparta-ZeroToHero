@@ -28,6 +28,7 @@ public class TankEnemy : Enemy
     [SerializeField] bool isAttacking;
     [SerializeField] int damageCount = 0;
     int currentAttackIndex = 1;
+    [SerializeField] bool isRaged;
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -46,16 +47,26 @@ public class TankEnemy : Enemy
         if (!isDamaged && !isDead)
         {
             checkAttack = Physics.CheckSphere(transform.position, attackRange, playerLayer);
+
             Movement();
+            Raged();
+
             if (checkAttack && !isAttacking)
             {
                 Attack();
+            }
+            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("rage"))
+            {
+                agent.isStopped = true;
             }
         }
         attackType = attackTypesEnemy[currentAttackIndex];
         damage = attackType.damage;
         Death();
     }
+
+
+
     public override void Movement()
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
@@ -82,21 +93,22 @@ public class TankEnemy : Enemy
             yield break;
         }
         isAttacking = true;
-        currentAttackIndex = damageCount < 5 ? 1 : 0;
+        currentAttackIndex = damageCount < 2 ? 1 : 0;
         animator.runtimeAnimatorController = attackTypesEnemy[currentAttackIndex].animatorOV;
         animator.SetTrigger("Attack");
-        if (!inSphereArea)
+        if (checkAttack)
             StartCoroutine(InAreaAttack());
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        yield return null;
         isAttacking = false;
         animator.ResetTrigger("Attack");
     }
     public override IEnumerator InAreaAttack()
     {
-        inSphereArea = true;
-        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
-        transform.LookAt(target.transform);
-        inSphereArea = false;
+        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        {
+            yield return null;
+            transform.LookAt(target.transform);
+        }
     }
     public override void TakeDamage(float damage)
     {
@@ -122,7 +134,14 @@ public class TankEnemy : Enemy
             Destroy(gameObject, 3);
         }
     }
-
+    private void Raged()
+    {
+        if (damageCount >= 2 && !isRaged)
+        {
+            isRaged = true;
+            animator.SetTrigger("rage");
+        }
+    }
     public void CheckAttackStatus() { isAttack = !isAttack; }
     public void CheckDamagedStatus(string boolType)
     {
