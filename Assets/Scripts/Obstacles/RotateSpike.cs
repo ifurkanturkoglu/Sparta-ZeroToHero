@@ -17,7 +17,7 @@ public class RotateSpike : MonoBehaviour
             other.gameObject.GetComponent<Enemy>().TakeDamage(damage);
         }
          if(other.gameObject.tag.Equals("Player")){
-            PlayerController.Instance.PlayerTakeDamage(null,damage);
+            Player.Instance.PlayerTakeDamage(null,damage);
         }
     }
 }

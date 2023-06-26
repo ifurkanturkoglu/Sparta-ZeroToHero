@@ -19,9 +19,9 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
       copied configuration does not match position in animation file:\n\t'mixamorig:LeftUpLeg'
-      : position error = 145.263931 mm\n\t'mixamorig:LeftLeg' : position error =
-      312.684906 mm\n\t'mixamorig:LeftFoot' : position error = 263.663055 mm\n\t'mixamorig:LeftToeBase'
-      : position error = 143.633331 mm\n"
+      : position error = 39.107014 mm\n\t'mixamorig:LeftLeg' : position error = 67.865616
+      mm\n\t'mixamorig:LeftFoot' : position error = 116.596497 mm\n\t'mixamorig:LeftToeBase'
+      : position error = 42.477699 mm\n"
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -54,29 +54,13 @@ ModelImporter:
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
       keepOriginalOrientation: 1
-      keepOriginalPositionY: 0
+      keepOriginalPositionY: 1
       keepOriginalPositionXZ: 1
-      heightFromFeet: 1
+      heightFromFeet: 0
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0
-        functionName: IsRollChange
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 0ac5eebcf71a4ff4b8eea72ab44a1b34,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.83739835
-        functionName: IsRollChange
-        data: 
-        objectReferenceParameter: {fileID: 11500000, guid: 0ac5eebcf71a4ff4b8eea72ab44a1b34,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

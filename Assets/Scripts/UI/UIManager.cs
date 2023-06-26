@@ -10,17 +10,18 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject pausePanel;
     [SerializeField] GameObject controlPanel;
     [SerializeField] GameObject settingsPanel;
+    [SerializeField] GameObject finishUI;
     public Image skill1, skill2, skill3;
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
     public TextMeshProUGUI healthPotCountText, staminaPotCountText;
     public TextMeshProUGUI informationText;
-    public Slider hpBar,staminaBar;
+    public Slider hpBar, staminaBar;
 
-    public string interactionInfoText ="Press the 'E' key to interact.";
+    public string interactionInfoText = "Press the 'E' key to interact.";
     public string waveInfoText = "Press 'V' to start the wave";
-    public bool textOrder ;
+    public bool textOrder;
 
     void Awake()
     {
@@ -51,7 +52,12 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
-        staminaBar.value = Player.GetStamina();
+        if (!Pots.Instance.canPotDrink)
+        {
+            staminaBar.value = Player.Instance.GetStamina();
+            hpBar.value = Player.Instance.GetHealth();
+        }
+
     }
     #region Panels
     public void PausePanel()
@@ -91,43 +97,31 @@ public class UIManager : MonoBehaviour
     }
     #endregion
     #region InGameUI
-
-    public IEnumerator UpdateHpBar(float potionHealthPercent, float health, bool increase, GameObject? pot)
+    public void InformationTextUpdate(string text, Color color)
     {
-        
-        float time = 0;
-        float increaseType = increase == true ? 1 : -1;
-        if (pot != null)
-            pot.SetActive(true);
-        while (time < potionHealthPercent)
-        {
-            time += Time.deltaTime * 15;
-            health = health + (increaseType * Time.deltaTime);
-            hpBar.value = hpBar.value + (increaseType * Time.deltaTime * 15);
-            yield return null;
-        }
-        if (pot != null)
-            pot.SetActive(false);
+        informationText.text = text;
+        informationText.color = color;
     }
-    public IEnumerator UpdateStaminaBar(float potionStaminaPercent, float stamina, bool increase, GameObject? pot)
-    {
+    public IEnumerator UpdateStaminaOrHPBar(Slider slider,float potionPercent,bool increase,GameObject? pot,float speed){
         float time = 0;
         float increaseType = increase == true ? 1 : -1;
         if (pot != null)
             pot.SetActive(true);
-        while (time < potionStaminaPercent)
+        while (time < potionPercent)
         {
-            time += Time.deltaTime * 15;
-            stamina = stamina + (increaseType * Time.deltaTime);
-            staminaBar.value = staminaBar.value + (increaseType * Time.deltaTime * 15);
+            time += Time.deltaTime * speed;
+            slider.value = slider.value + (increaseType * Time.deltaTime * speed);
             yield return null;
         }
         if (pot != null)
             pot.SetActive(false);
     }
 
+    public void FinishUIOpen()
+    {
+        finishUI.SetActive(true);
+    }
 
-    
     public void MarketOpen(GameObject marketUI)
     {
         marketUI.SetActive(true);
@@ -142,25 +136,24 @@ public class UIManager : MonoBehaviour
         staminaBar.value = stamina;
     }
 
-    public void InformationTextUpdate(string text,Color color){
-        informationText.text = text;
-        informationText.color = color;
-    }
+    
 
     public IEnumerator SkillIconUpdate(Image skillImage, float cooldown)
     {
         float timer = 0;
         skillImage.fillAmount = 0;
-        
-        while(timer <= cooldown){
-            timer +=Time.deltaTime;
-            skillImage.fillAmount += Time.deltaTime*1/cooldown;
+
+        while (timer <= cooldown)
+        {
+            timer += Time.deltaTime;
+            skillImage.fillAmount += Time.deltaTime * 1 / cooldown;
             yield return null;
         }
     }
 
 
-    public void menüyegit(){
+    public void menüyegit()
+    {
         SceneManager.LoadScene(0);
         Time.timeScale = 1;
         Destroy(GameObject.FindGameObjectWithTag("MainMusic"));

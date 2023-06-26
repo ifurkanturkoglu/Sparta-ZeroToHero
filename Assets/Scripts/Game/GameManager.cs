@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        gold = 0;
+        gold = 111110;
         score = 0;
         
     }
@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
         if(dieEnemyCount == GenerateEnemy.Instance.enemyCount){
             waveComplete = true;
             dieEnemyCount =0;
+            UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
         }
         if(Input.GetKeyDown(KeyCode.F7)){
             SceneManager.LoadScene(1);

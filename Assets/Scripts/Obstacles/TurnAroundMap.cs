@@ -24,7 +24,7 @@ public class TurnAroundMap : MonoBehaviour
             other.gameObject.GetComponent<Enemy>().health -=damage;
         }
          if(other.gameObject.GetComponent<Player>() !=null){
-            PlayerController.Instance.PlayerTakeDamage(null,damage);
+            Player.Instance.PlayerTakeDamage(null,damage);
         }
     }
 }

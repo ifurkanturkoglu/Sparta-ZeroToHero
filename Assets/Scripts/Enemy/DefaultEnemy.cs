@@ -96,9 +96,6 @@ public class DefaultEnemy : Enemy
             GameManager.Instance.UpdateScore(score);
             CreateGold(transform, gold);
             GameManager.Instance.dieEnemyCount++;
-            if(GameManager.Instance.waveComplete){
-                UIManager.Instance.InformationTextUpdate(UIManager.Instance.waveInfoText,Color.green);
-            }
             Destroy(gameObject, 3);
         }
     }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Pots : Player
 {
-    public static Pots Instance;
+    public static new Pots Instance;
     public int healthPotionCount;
     public int staminaPotionCount;
     public PotsType equipmentPotType = PotsType.Health;
     [SerializeField] AnimatorOverrideController potionDrink;
     [SerializeField] GameObject healthPotion,staminaPotion;
     [SerializeField] AudioClip potSound;
-    bool canPotDrink;
+    public bool canPotDrink;
 
 
     void Awake()
@@ -20,7 +20,11 @@ public class Pots : Player
         healthPotionCount = 0;
         staminaPotionCount = 0;
     }
-
+   
+    void Update()
+    {
+        
+    }
 
     public void DrinkPot(PotsType potType)
     {
@@ -32,12 +36,13 @@ public class Pots : Player
             switch (potType)
             {
                 case PotsType.Health:
-                    if (healthPotionCount > 0)
+                    if (healthPotionCount > 0 && health < maxHealth)
                     {
                         healthPotionCount--;
-                        increasePercent = PlayerController.Instance.health + 20 >= maxHealth ? maxHealth - PlayerController.Instance.health : 20;
-                        PlayerController.Instance.health += increasePercent;
-                        StartCoroutine(UIManager.Instance.UpdateHpBar(increasePercent, PlayerController.Instance.health, true,healthPotion));
+                        increasePercent = health + 20 >= maxHealth ? maxHealth - health : 20;
+                        IncreaseHealth(increasePercent);
+                        print(health);
+                        StartCoroutine(UIManager.Instance.UpdateStaminaOrHPBar(UIManager.Instance.hpBar,increasePercent, true,healthPotion,15));
                         UIManager.Instance.healthPotCountText.text = healthPotionCount.ToString();
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
@@ -45,13 +50,14 @@ public class Pots : Player
                     }
                     break;
                 case PotsType.Stamina:
-                    if (staminaPotionCount > 0)
+                    if (staminaPotionCount > 0 && stamina < maxStamina)
                     {
                         staminaPotionCount--;
                         increasePercent = stamina + 20 >= maxStamina ? maxStamina - stamina : 20;
-                        stamina += increasePercent;
+                        StaminaChange(increasePercent,true);
+                        print(stamina);
                         UIManager.Instance.staminaPotCountText.text = staminaPotionCount.ToString();
-                        StartCoroutine(UIManager.Instance.UpdateStaminaBar(increasePercent, stamina, true,staminaPotion));
+                        StartCoroutine(UIManager.Instance.UpdateStaminaOrHPBar(UIManager.Instance.staminaBar,increasePercent, true,staminaPotion,15));
                         PlayerController.Instance.animator.runtimeAnimatorController = potionDrink;
                         PlayerController.Instance.animator.Play("Interaction", 2);
                         AudioController.Instance.audioSource.PlayOneShot(potSound);

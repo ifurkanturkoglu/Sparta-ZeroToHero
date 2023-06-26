@@ -61,19 +61,19 @@ public class NPCMarket : Interactable
                     switch (marketObject.name.Substring(0, marketObject.name.IndexOf("Boost")))
                     {
                         case "Attack":
-                            Player.BuffPassives(Player.PassiveStatus.Damage);
+                            Player.Instance.BuffPassives(Player.PassiveStatus.Damage);
                             break;
                         case "Health":
                             RectTransform healthBarRect =  UIManager.Instance.hpBar.GetComponent<RectTransform>();
                             healthBarRect.sizeDelta = new Vector2(healthBarRect.sizeDelta.x+10, healthBarRect.sizeDelta.y);
                             healthBarRect.anchoredPosition = new Vector2(healthBarRect.anchoredPosition.x+5,healthBarRect.anchoredPosition.y);
-                            Player.BuffPassives(Player.PassiveStatus.Health);
+                            Player.Instance.BuffPassives(Player.PassiveStatus.Health);
                             break;
                         case "Stamina":
                             RectTransform staminaBarRect =  UIManager.Instance.staminaBar.GetComponent<RectTransform>();
                             staminaBarRect.sizeDelta = new Vector2(staminaBarRect.sizeDelta.x+10, staminaBarRect.sizeDelta.y);
                             staminaBarRect.anchoredPosition = new Vector2(staminaBarRect.anchoredPosition.x+5,staminaBarRect.anchoredPosition.y);
-                            Player.BuffPassives(Player.PassiveStatus.Stamina);
+                            Player.Instance.BuffPassives(Player.PassiveStatus.Stamina);
                             break;
                     }
                     GameManager.Instance.gold -= objectGold;

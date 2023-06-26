@@ -10,12 +10,12 @@ using System;
 
 public class PlayerController : Player
 {
-    [SerializeField] GameObject FinishUI;
+    public static new PlayerController Instance;
     [SerializeField] Volume volume;
-    Vignette vignette;
-    public static PlayerController Instance;
+    public Vignette vignette;
+    
     public Animator animator;
-    Coroutine damageCoroutine;
+    
 
     [Header("Movement")]
     [SerializeField] Transform elevatorMidPosition;
@@ -35,7 +35,7 @@ public class PlayerController : Player
 
     [Header("Combat")]
     bool isChangingAttack;
-    [SerializeField] AudioClip damageSound,deathSound;
+    
 
     [SerializeField] List<AttackType> attackTypesPlayer;
     // [SerializeField] AnimatorOverrideController rightClickAttakAnim;
@@ -50,7 +50,8 @@ public class PlayerController : Player
     public List<SkillType> skillTypes;
     [SerializeField] GameObject spear, sword;
     [SerializeField] Transform spearSpawnPoint;
-    [SerializeField] bool skillActive, isShieldActive;
+    [SerializeField] bool skillActive;
+    public bool isShieldActive;
     [SerializeField] Material shieldMaterial;
     LayerMask enemyLayerMask;
     float forceRadius = 10f;
@@ -92,9 +93,9 @@ public class PlayerController : Player
         ChangeWeapon();
     }
 
-
     void Update()
     {
+        
         horizontal = Input.GetAxis("Horizontal") * Time.deltaTime;
         vertical = Input.GetAxis("Vertical") * Time.deltaTime;
 
@@ -281,50 +282,11 @@ public class PlayerController : Player
     #endregion
 
     #region InteractionMethods
-    public void PlayerTakeDamage(Enemy? enemy, float? damagePercent)
-    {
-        float damage = 0;
-        if (damageCoroutine != null)
-        {
-            StopCoroutine(damageCoroutine);
-        }
-        if (enemy != null)
-        {
-            damage = isShieldActive ? enemy.damage - 2 : enemy.damage;
-            damageCoroutine = StartCoroutine(DamageEffectTime());
-        }
-        else if (damagePercent != null)
-        {
-            damage = (float)(isShieldActive ? damagePercent - 15 : damagePercent);
-            damageCoroutine = StartCoroutine(DamageEffectTime());
-        }
-        health -= damage;
-        CameraController.Instance.ScreenShake(0.1f);
-        StartCoroutine(UIManager.Instance.UpdateHpBar(damage, health, false,null));
-        AudioController.Instance.audioSource.PlayOneShot(damageSound);
-        if (health <= 0)
-        {
-            AudioController.Instance.audioSource.PlayOneShot(deathSound);
-            animator.SetBool("dead", true);
-            FinishUI.SetActive(true);
-        }
-
-    }
+   
     public void CheckIsDamaged(string text){
         isDamaged = text.Equals("true")? true: false;
     }
-    IEnumerator DamageEffectTime()
-    {
-       
-        animator.SetTrigger("isDamaged");
-        vignette.smoothness.value = .4f;
-        while (vignette.smoothness.value > 0f)
-        {
-            vignette.smoothness.value -= Time.deltaTime;
-            yield return null;
-        }
-        
-    }
+    
 
 
     #endregion
@@ -339,14 +301,14 @@ public class PlayerController : Player
         animator.runtimeAnimatorController = skillTypes[(int)skill.skillEffect - 1].animatorOverrideController;
         if (skill.useSkill)
         {
+            StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
             switch (skill.skillEffect)
             {
+               
                 case SkillType.SkillEffect.Damage:
                     if (stamina >= skill.mana)
                     {
-                        stamina -= skill.mana;
                         Spear(skillTypes[skillType - 1].skillEffectScale);
-                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
                         StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill1,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
@@ -354,9 +316,7 @@ public class PlayerController : Player
                 case SkillType.SkillEffect.Force:
                     if (stamina >= skill.mana)
                     {
-                        stamina -= skill.mana;
                         StartCoroutine(CameraController.Instance.skillAnimaton(skillType));
-                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
                         StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill2,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
@@ -364,15 +324,15 @@ public class PlayerController : Player
                 case SkillType.SkillEffect.Shield:
                     if (stamina >= skill.mana)
                     {
-                        stamina -= skill.mana;
                         Shield(skillTypes[skillType - 1].skillEffectScale);
-                        StartCoroutine(SkillCooldownCalculate(((b, n) => { skill.cooldown = b; skill.useSkill = n; }), skill));
                         StartCoroutine(UIManager.Instance.SkillIconUpdate(UIManager.Instance.skill3,skill.cooldown));
                         animator.Play("Skill", 1);
                     }
                     break;
             }
-
+            print(skill.useSkill);
+            StaminaChange(skill.mana,false);
+            StartCoroutine(UIManager.Instance.UpdateStaminaOrHPBar(UIManager.Instance.staminaBar,skill.mana,false,null,20));
         }
     }
     delegate void ChangeCooldown(float time, bool isSkillUse);
@@ -448,7 +408,6 @@ public class PlayerController : Player
                 rb.isKinematic = true;
             }
         }
-
     }
 
 
@@ -489,12 +448,12 @@ public class PlayerController : Player
                 PlayerTakeDamage(attackEnemy, null);
         }
     }
+    //TODO informationText kısımları düzeltilecek
     void OnTriggerStay(Collider other)
     {
         inInteractableArea = true;
         if (other.tag.Equals("Interactable"))
         {
-            
             interactable = other.gameObject.GetComponent<Interactable>();
             if(GameManager.Instance.waveComplete && !Elevator.Instance.elevatorIsRun){
                 UIManager.Instance.InformationTextUpdate(UIManager.Instance.interactionInfoText,Color.white);

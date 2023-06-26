@@ -4,18 +4,12 @@ using UnityEngine;
 
 public class PlayerAnimationController : Player
 {
-    public static PlayerAnimationController Instance;
+    public static new PlayerAnimationController Instance;
     
     void Start()
     {
         Instance = this;
     }
-
-    
-    void Update()
-    {
-    }
-
     
 
     #region InteractionAnimation
@@ -23,7 +17,6 @@ public class PlayerAnimationController : Player
         Vector3 moveDirection = (target.position - transform.position).normalized;
         transform.rotation = Quaternion.LookRotation(moveDirection);
         PlayerController.Instance.isInteractionAnimation = true;
-        //karakterin hareketi düzeltilecek. yönünü düzgün yapılması lazım.
         PlayerController.Instance.animator.SetBool("isInteractionAnimation",true);
         while(Vector3.Distance(transform.position,target.position) > 1f){
            
