@@ -24,11 +24,10 @@ public class EffectController : MonoBehaviour
         enemyDamageEffect.Play();
     }
     public IEnumerator EnemyDamageBlood(Transform enemyPosition){
-        print("girdi");
         bloodEffect.transform.position = new Vector3(enemyPosition.position.x,1, enemyPosition.position.z);
         bloodEffect.transform.rotation = Quaternion.LookRotation(enemyPosition.transform.right);
         bloodEffect.SetActive(true);
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(1f);
         bloodEffect.SetActive(false);
     }
 }

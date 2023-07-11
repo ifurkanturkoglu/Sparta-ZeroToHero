@@ -25,12 +25,13 @@ public abstract class Enemy : MonoBehaviour
     public abstract bool isDead { get; set; }
     public abstract void Movement();
     public abstract void Attack();
+    public abstract void Death();
     public abstract void TakeDamage(float damage);
     public abstract IEnumerator InAreaAttack();
-   
+
     public void CreateGold(Transform createPos, int goldRate)
     {
-        GameObject cloneGold = Instantiate(GameManager.Instance.goldPrefab,createPos.position + new Vector3(0,1,0), createPos.rotation);
+        GameObject cloneGold = Instantiate(GameManager.Instance.goldPrefab, createPos.position + new Vector3(0, 1, 0), createPos.rotation);
         cloneGold.GetComponent<Gold>().gold = goldRate;
         cloneGold.transform.SetParent(GameManager.Instance.goldsParent);
     }

@@ -7,7 +7,7 @@ public class GenerateEnemy : MonoBehaviour
 {
     public static GenerateEnemy Instance;
     int totalEnemyCount;
-    public int normal, faster, ranger, tank = 0;
+    public int faster, ranger, tank = 0;
     public int enemyCount;
     public GameObject[] prefabs;
     [SerializeField] Transform enemies, player;
@@ -16,18 +16,14 @@ public class GenerateEnemy : MonoBehaviour
 
     void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
             Instance = this;
-    }
-    private void Start()
-    {
-        //Invoke(nameof(NewEnemy), 2);
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.V) && GameManager.Instance.waveComplete && !Elevator.Instance.elevatorIsRun && !Elevator.Instance.elevatorLocation)
         {
-            UIManager.Instance.InformationTextUpdate("",Color.green);
+            UIManager.Instance.InformationTextUpdate("", Color.green);
             GameManager.Instance.waveComplete = false;
             GameManager.Instance.IncreaseWave();
             NewEnemy();
@@ -35,22 +31,19 @@ public class GenerateEnemy : MonoBehaviour
     }
     private void NewEnemy()
     {
-        
-        lowerBound = lowerBound +2;
+
+        lowerBound = lowerBound + 2;
         upperBound = lowerBound + 3;
 
         totalEnemyCount = Random.Range(lowerBound, upperBound);
-        int normalMin = totalEnemyCount / 2;
-        int normalMax = (totalEnemyCount * 3) / 4;
-        normal = Random.Range(normalMin, normalMax);
 
-        totalEnemyCount -= normal;
 
-        //int fasterMin = totalEnemyCount / 2;
-        //int fasterMax = (totalEnemyCount * 3) / 4;
-        //faster = Random.Range(fasterMin, fasterMax);
+        int fasterMin = totalEnemyCount / 2;
+        int fasterMax = (totalEnemyCount * 3) / 4;
+        faster = Random.Range(fasterMin, fasterMax);
 
-        //totalEnemyCount -= faster;
+        totalEnemyCount -= faster;
+
 
         int rangerMin = totalEnemyCount / 2;
         int rangerMax = (totalEnemyCount * 3) / 4;
@@ -58,18 +51,13 @@ public class GenerateEnemy : MonoBehaviour
 
         totalEnemyCount -= ranger;
 
-        //if (GameManager.Instance.wave % 5 == 0)
-        //{
-        //    tank = totalEnemyCount;
-        //}
-        //else
-        //{
-        //    tank = 0;
-        //}
-        enemyCount = normal + faster + ranger + tank;
+        int tankMin = totalEnemyCount / 2;
+        int tankMax = (totalEnemyCount * 3) / 4;
+        tank = Random.Range(tankMin, tankMax);
 
-        //int[] counts = { normal, ranger, faster, tank };
-        int[] counts = { normal, ranger };
+        enemyCount = faster + ranger + tank;
+
+        int[] counts = { faster, ranger, tank };
 
         StartCoroutine(SpawnEnemy(counts));
     }

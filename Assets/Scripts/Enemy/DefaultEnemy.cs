@@ -36,7 +36,6 @@ public class DefaultEnemy : Enemy
         gold = 10;
         goldRate = 25;
         score = 50;
-
     }
     private void Update()
     {
@@ -45,6 +44,7 @@ public class DefaultEnemy : Enemy
             Movement();
             Attack();
         }
+        Death();
     }
     public override void Movement()
     {
@@ -88,6 +88,20 @@ public class DefaultEnemy : Enemy
     {
         health -= damage;
         animator.SetTrigger("damage");
+
+    }
+    public void CheckAttackStatus() { isAttack = !isAttack; }
+    public void CheckDamagedStatus(string boolType) { isDamaged = boolType == "true" ? true : false; }
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.canAttack && !isDead)
+        {
+            TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
+        }
+    }
+
+    public override void Death()
+    {
         if (health <= 0 && !isDead)
         {
             isDead = true;
@@ -97,15 +111,6 @@ public class DefaultEnemy : Enemy
             CreateGold(transform, gold);
             GameManager.Instance.dieEnemyCount++;
             Destroy(gameObject, 3);
-        }
-    }
-    public void CheckAttackStatus() { isAttack = !isAttack; }
-    public void CheckDamagedStatus(string boolType) { isDamaged = boolType == "true" ? true : false; }
-    void OnCollisionEnter(Collision other)
-    {
-        if (other.transform.tag.Equals("Weapon") && PlayerController.Instance.canAttack&& !isDead)
-        {
-            TakeDamage(PlayerController.Instance.equipmentWeapon.damage);
         }
     }
 }

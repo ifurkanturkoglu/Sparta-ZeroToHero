@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName ="EnemyAttack")]
+[CreateAssetMenu(menuName = "EnemyAttack")]
 public class AttackTypeEnemy : ScriptableObject
 {
     public AnimatorOverrideController animatorOV;

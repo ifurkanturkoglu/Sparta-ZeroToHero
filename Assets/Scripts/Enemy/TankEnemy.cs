@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -57,16 +57,15 @@ public class TankEnemy : Enemy
             }
             else if (animator.GetCurrentAnimatorStateInfo(0).IsName("rage"))
             {
+                print("a"); // health da neden olmadı?
                 agent.isStopped = true;
             }
         }
         attackType = attackTypesEnemy[currentAttackIndex];
         damage = attackType.damage;
         Death();
+        
     }
-
-
-
     public override void Movement()
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
@@ -80,12 +79,10 @@ public class TankEnemy : Enemy
             agent.isStopped = true;
         }
     }
-
     public override void Attack()
     {
         StartCoroutine(AttackChange());
     }
-
     public IEnumerator AttackChange()
     {
         if (isAttacking)
@@ -94,6 +91,7 @@ public class TankEnemy : Enemy
         }
         isAttacking = true;
         currentAttackIndex = damageCount < 2 ? 1 : 0;
+        //currentAttackIndex = health < 150 ? 1 : 0;
         animator.runtimeAnimatorController = attackTypesEnemy[currentAttackIndex].animatorOV;
         animator.SetTrigger("Attack");
         if (checkAttack)
@@ -104,7 +102,7 @@ public class TankEnemy : Enemy
     }
     public override IEnumerator InAreaAttack()
     {
-        if(!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
         {
             yield return null;
             transform.LookAt(target.transform);
@@ -116,11 +114,11 @@ public class TankEnemy : Enemy
         isAttack = false;
         animator.SetTrigger("damage");
     }
-
-    private void Death()
+    public override void Death()
     {
         if (health <= 0 && !isDead)
         {
+            agent.isStopped = true;
             isDead = true;
             animator.SetTrigger("isDead");
             animator.SetBool("isDeadBool", isDead);
@@ -136,7 +134,7 @@ public class TankEnemy : Enemy
     }
     private void Raged()
     {
-        if (damageCount >= 2 && !isRaged)
+        if (damageCount>=2 && !isRaged)
         {
             isRaged = true;
             animator.SetTrigger("rage");
@@ -173,3 +171,4 @@ public class TankEnemy : Enemy
 // movementstate
 // attackstate
 // deathstate
+// animator isint

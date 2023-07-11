@@ -824,14 +824,13 @@ GameObject:
   - component: {fileID: 2349996408686261213}
   - component: {fileID: -3010029154873708327}
   - component: {fileID: 8248941431710374590}
-  - component: {fileID: 987991294}
   m_Layer: 7
-  m_Name: Tank
+  m_Name: TankEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 16
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2421422511896348600
 Transform:
   m_ObjectHideFlags: 0
@@ -941,18 +940,6 @@ MonoBehaviour:
   isAttacking: 0
   damageCount: 0
   isRaged: 0
---- !u!114 &987991294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3085333387943550210}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 163720a079618954b98892a8e5ea2fc8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3722586151066455272
 GameObject:
   m_ObjectHideFlags: 0

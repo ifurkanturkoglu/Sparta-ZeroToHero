@@ -3424,7 +3424,7 @@ GameObject:
   - component: {fileID: 5911444102602306798}
   - component: {fileID: -7111562847474868917}
   m_Layer: 7
-  m_Name: DefaultEnemy
+  m_Name: FasterEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
