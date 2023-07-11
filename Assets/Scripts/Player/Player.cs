@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
         if (Instance == null)
             Instance = this;
         health = 100;
-        stamina = 100;   
+        stamina = 100;    
     }
     void Start()
     {

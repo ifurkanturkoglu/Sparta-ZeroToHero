@@ -11,20 +11,22 @@ public class MoveState : PlayerState
 
     public override void EnterState(PlayerControllerD player)
     {
-        Debug.Log("move state enter");
+        
     }
 
 
     public override void UpdateState(PlayerControllerD player)
     {
+        if ((Input.GetMouseButtonDown(0)))
+        {
+            player.SwitchState(player.attackState);
+        }
         if (player.horizontal == 0 && player.vertical == 0)
         {
             ExitState(player);
             player.SwitchState(player.idleState);
         }
         newPos = new Vector3(player.horizontal, 0, player.vertical);
-        
-        Debug.Log(player.horizontal+"---"+player.vertical);
         if(Mathf.Abs(player.horizontal) > 0.001f || Mathf.Abs(player.vertical) > 0.001f){
             direction = new Vector3(player.horizontal, 0, player.vertical).normalized;
             //Dönme düzeltilecek

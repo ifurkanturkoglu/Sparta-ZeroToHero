@@ -243,7 +243,7 @@ public class PlayerController : Player
     IEnumerator ChangeAttackType(Weapon crWeapon)
     {
         if (isChangingAttack) yield break;
-
+    
         isChangingAttack = true;
         equipmentWeapon.GetComponent<Sword>().swordAttackEffect.enabled = true;
         if (attackTypeCount == attackTypesPlayer.Count)

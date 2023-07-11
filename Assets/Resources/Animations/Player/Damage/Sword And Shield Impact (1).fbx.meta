@@ -65,7 +65,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6787149
+      - time: 0.3160775
         functionName: CheckIsDamaged
         data: false
         objectReferenceParameter: {fileID: 11500000, guid: 0ac5eebcf71a4ff4b8eea72ab44a1b34,

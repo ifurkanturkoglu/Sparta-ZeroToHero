@@ -22,8 +22,11 @@ public class PlayerControllerD : PlayerD
     public float speed;
 
     [Header("Combat")]
-    [SerializeField] List<AttackType> attackTypesPlayer;
+    public List<AttackType> attackTypesPlayer;
     public Weapon equipmentWeapon;
+    public float comboTimerForClickAttack;
+    public bool isChangingAttack,canAttack;
+    public int attackTypeCount = 0;
     Weapon.WeaponType playerEquiuppedWeaponType;
     Collider equimentWeaponCollider;
 
@@ -47,7 +50,11 @@ public class PlayerControllerD : PlayerD
         horizontal = Input.GetAxis("Horizontal") * Time.deltaTime;
         vertical = Input.GetAxis("Vertical") * Time.deltaTime;
         //skill kullanma birden fazla statede bulunacak fakat bazı statelerde bulunmayacak bunu interfacelerle ya da her state'e tekrar tekrar yaz
-       
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            SwitchState(attackState);
+        }
         if (Input.GetKeyDown(KeyCode.F) && currentState != interactionState)
         {
             Pots.Instance.DrinkPot(Pots.Instance.equipmentPotType);
@@ -55,6 +62,16 @@ public class PlayerControllerD : PlayerD
         if (Input.GetKeyDown(KeyCode.Q))
         {
             ChangeDrinkPotionType();
+        }
+
+        if (comboTimerForClickAttack < equipmentWeapon.comboResetTime)
+        {
+            comboTimerForClickAttack += Time.deltaTime;
+        }
+        else
+        {
+            ResetComboCount();
+            print("else");
         }
 
         currentState.UpdateState(this);
@@ -115,6 +132,17 @@ public class PlayerControllerD : PlayerD
                 UIManager.Instance.staminaPotCountText.color = Color.green;
                 break;
         }
+    }
+
+
+    void ResetComboCount()
+    {
+        attackTypeCount = 0;
+        comboTimerForClickAttack = 0;
+    }
+    public void CheckAttack(string check)
+    {
+        canAttack = check.Equals("true") ? true : false;
     }
 
     void ChangeWeapon()

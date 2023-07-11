@@ -1,84 +1,54 @@
 fileFormatVersion: 2
-guid: 82b368b3ceff4f043b0de379805a30a4
+guid: 6ab4d979ea1328641a6e5d576a3801de
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
   externalObjects:
   - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Akai_MAT1
-    second: {fileID: 2100000, guid: c63ebb21221620a4b9c0c96330afdaa4, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Arrow_MAT
-    second: {fileID: 2100000, guid: f76195c6ad192e64497fc959d12fca92, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Body_MAT1
-    second: {fileID: 2100000, guid: 2876617379ec5104fa55b1952b26e805, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Bow_MAT
-    second: {fileID: 2100000, guid: 928b370063a8cf24aacde87d75ae607f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: EyeSpec_MAT1
-    second: {fileID: 2100000, guid: c25f047322ff3294c9475a901918321e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: phong1
-    second: {fileID: 2100000, guid: 5a5498585fef3954c8af64f62d7e2654, type: 2}
-  - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Arrow_DIFF
-    second: {fileID: 2800000, guid: dd8f1536b8175934898da6f626112edc, type: 3}
+    second: {fileID: 2800000, guid: ebc9f93b14d017a4cb72eaa50c393512, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Arrow_NM
-    second: {fileID: 2800000, guid: b1e49f1dd6615da4497364271affb927, type: 3}
+    second: {fileID: 2800000, guid: 4b6242f6a3a48af4aa05b3025db8e527, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Bow_DIFF
-    second: {fileID: 2800000, guid: cb089818f5e1a3042b3ed5ba9c41bb06, type: 3}
+    second: {fileID: 2800000, guid: c5f92ccce89767f428dfe0ae7eabb680, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Bow_NM
-    second: {fileID: 2800000, guid: 1f56830a47ff4274db7c843d2a195719, type: 3}
+    second: {fileID: 2800000, guid: fed3dc66b46c68742b4289a81d5a340c, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Erika_Archer_Clothes_diffuse
-    second: {fileID: 2800000, guid: 4e257103da501e449afdfc9193834e01, type: 3}
+    second: {fileID: 2800000, guid: ce2d52efd379f2d408ff43360ef82466, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Erika_Archer_Clothes_normal
-    second: {fileID: 2800000, guid: 3fdbc7572f4e06347a241241d569dc1c, type: 3}
+    second: {fileID: 2800000, guid: a677fb4604e9fab4b97a6b9def256a90, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: FemaleFitA_Body_diffuse
-    second: {fileID: 2800000, guid: cccd4d90c3ca7a044948690de3c1bfe8, type: 3}
+    second: {fileID: 2800000, guid: 8b4cd8bc634a79744976be19e527eb4c, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: FemaleFitA_StdNM
-    second: {fileID: 2800000, guid: 235244168ee1ef440a700ae99804f049, type: 3}
+    second: {fileID: 2800000, guid: 43a0f3ef012f5ad4d9abf84ca5600b25, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: FemaleFitA_eyelash_diffuse
-    second: {fileID: 2800000, guid: ac96b3981cdb18d46844da9eb4c8562f, type: 3}
+    second: {fileID: 2800000, guid: 2c36f30c349405848a4eef928d7fa247, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -564,43 +534,43 @@ ModelImporter:
         length: 0
         modified: 0
     skeleton:
-    - name: Archer(Clone)
+    - name: Erika Archer With Bow Arrow(Clone)
       parentName: 
       position: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Clothes_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Eyelashes_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Bow_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Body_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Eyes_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: Erika_Archer_Arrow_Mesh
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: -0, y: 0, z: 0}
       rotation: {x: 0, y: -0, z: -0, w: 1}
       scale: {x: 1, y: 1, z: 1}
     - name: mixamorig:Hips
-      parentName: Archer(Clone)
+      parentName: Erika Archer With Bow Arrow(Clone)
       position: {x: 0.000022432392, y: 1.0425363, z: 0.015542432}
       rotation: {x: 2.7105054e-18, y: -2.1842864e-34, z: -8.058594e-17, w: 1}
       scale: {x: 1, y: 1, z: 1}

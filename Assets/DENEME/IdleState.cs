@@ -12,6 +12,10 @@ public class IdleState : PlayerState
 
     public override void UpdateState(PlayerControllerD player)
     {
+        if ((Input.GetMouseButtonDown(0)))
+        {
+            player.SwitchState(player.attackState);
+        }
         if ((Input.inputString.Equals("1") || Input.inputString.Equals("2") || Input.inputString.Equals("3")))
         {
             player.SwitchState(player.skillState);

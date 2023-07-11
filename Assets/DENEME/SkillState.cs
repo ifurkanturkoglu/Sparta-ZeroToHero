@@ -7,7 +7,7 @@ public class SkillState : PlayerState
     
     public override void EnterState(PlayerControllerD player)
     {
-        SkillController skillController =player.GetComponent<SkillController>();
+        SkillController skillController = player.GetComponent<SkillController>();
         skillController.UseSkill(player.animator,int.Parse(Input.inputString),player.GetStamina());
     }
 
