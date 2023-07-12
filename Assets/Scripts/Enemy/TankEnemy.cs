@@ -57,7 +57,6 @@ public class TankEnemy : Enemy
             }
             else if (animator.GetCurrentAnimatorStateInfo(0).IsName("rage"))
             {
-                print("a"); // health da neden olmadı?
                 agent.isStopped = true;
             }
         }
@@ -167,8 +166,3 @@ public class TankEnemy : Enemy
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
-
-// movementstate
-// attackstate
-// deathstate
-// animator isint

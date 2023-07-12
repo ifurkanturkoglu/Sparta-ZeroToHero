@@ -56,10 +56,6 @@ public class ArcherEnemy : Enemy
     private void Update()
     {
         checkAttack = Physics.CheckSphere(transform.position, attackRange, playerLayer);
-        //Vector3 direction = target.transform.position - transform.position;
-        //RaycastHit hit;
-        //check = Physics.Raycast(transform.position, direction, out hit, attackRange, playerLayer);
-
         Movement();
 
         Attack();
@@ -102,7 +98,7 @@ public class ArcherEnemy : Enemy
         {
             if (!arrowPrefabs[i].activeInHierarchy)
             {
-                arrowPrefabs[i].transform.position = arrowSpawnPoint.transform.position /*+ transform.TransformVector(0, 1.7f, 0)*/;
+                arrowPrefabs[i].transform.position = arrowSpawnPoint.transform.position;
                 arrowPrefabs[i].transform.rotation = transform.rotation;
                 arrowPrefabs[i].SetActive(true);
                 break;
@@ -111,7 +107,7 @@ public class ArcherEnemy : Enemy
     }
     public override IEnumerator InAreaAttack()
     {
-        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName("Attack") && !isDead)
         {
             yield return null;
             transform.LookAt(target.transform);
